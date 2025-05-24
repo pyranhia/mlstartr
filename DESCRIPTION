@@ -1,13 +1,10 @@
 Package: mlstartr
-Title: An Amazing Shiny App
+Title: mlstartr : Application pédagogique pour débuter en machine learning
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "firstname",
-           family = "lastname",
-           role = c("aut", "cre"),
-           email = "your@email.com")
-Description: What the package does (one paragraph).
-License: What license is it under?
+    person("Thelma", "Panaïotis", , "panaiotis@crans.org", role = c("aut", "cre"))
+Description: Une application Shiny pédagogique pour s’initier pas à pas au machine learning avec tidymodels.
+License: MIT + file LICENSE
 Imports: 
     config,
     golem,
@@ -15,3 +12,8 @@ Imports:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US

@@ -20,12 +20,12 @@
 ##
 golem::fill_desc(
   pkg_name = "mlstartr", # The name of the golem package containing the app (typically lowercase, no underscore or periods)
-  pkg_title = "PKG_TITLE", # What the Package Does (One Line, Title Case, No Period)
-  pkg_description = "PKG_DESC.", # What the package does (one paragraph).
+  pkg_title = "mlstartr : Application pédagogique pour débuter en machine learning", # What the Package Does (One Line, Title Case, No Period)
+  pkg_description = "Une application Shiny pédagogique pour s’initier pas à pas au machine learning avec tidymodels.", # What the package does (one paragraph).
   authors = person(
-    given = "AUTHOR_FIRST", # Your First Name
-    family = "AUTHOR_LAST", # Your Last Name
-    email = "AUTHOR@MAIL.COM", # Your email
+    given = "Thelma", # Your First Name
+    family = "Panaïotis", # Your Last Name
+    email = "panaiotis@crans.org", # Your email
     role = c("aut", "cre") # Your role (here author/creator)
   ),
   repo_url = NULL, # The URL of the GitHub repo (optional),
@@ -38,14 +38,14 @@ golem::install_dev_deps()
 
 ## Create Common Files ----
 ## See ?usethis for more information
-usethis::use_mit_license("Golem User") # You can set another license here
+usethis::use_mit_license("Thelma Panaïotis") # You can set another license here
 golem::use_readme_rmd(open = FALSE)
 devtools::build_readme()
 # Note that `contact` is required since usethis version 2.1.5
 # If your {usethis} version is older, you can remove that param
-usethis::use_code_of_conduct(contact = "Golem User")
-usethis::use_lifecycle_badge("Experimental")
-usethis::use_news_md(open = FALSE)
+#usethis::use_code_of_conduct(contact = "Golem User")
+#usethis::use_lifecycle_badge("Experimental")
+#usethis::use_news_md(open = FALSE)
 
 ## Init Testing Infrastructure ----
 ## Create a template for tests
@@ -61,12 +61,12 @@ golem::use_utils_ui(with_test = TRUE)
 golem::use_utils_server(with_test = TRUE)
 
 ## Use git ----
-usethis::use_git()
+#usethis::use_git()
 ## Sets the remote associated with 'name' to 'url'
-usethis::use_git_remote(
-  name = "origin",
-  url = "https://github.com/<OWNER>/<REPO>.git"
-)
+#usethis::use_git_remote(
+#  name = "origin",
+#  url = "https://github.com/<OWNER>/<REPO>.git"
+#)
 
 # You're now set! ----
 
