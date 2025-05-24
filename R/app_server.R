@@ -6,4 +6,5 @@
 #' @noRd
 app_server <- function(input, output, session) {
   # Your application server logic
+  mod_intro_server("intro_1")
 }

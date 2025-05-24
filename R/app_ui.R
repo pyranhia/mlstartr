@@ -4,13 +4,37 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
+
+library(shinydashboard)
+
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      golem::golem_welcome_page() # Remove this line to start building your UI
+    dashboardPage(
+      dashboardHeader(title = "MLstartr"),
+      dashboardSidebar(
+        sidebarMenu(
+          id = "tabs",
+          menuItem("Introduction", tabName = "intro")
+          #menuItem("Données", tabName = "data", disabled = TRUE)
+          #menuItem("Modèle", tabName = "model", disabled = TRUE)
+        )
+      ),
+      dashboardBody(
+        tabItems(
+          tabItem(tabName = "intro",
+                  mod_intro_ui("intro_1")
+          )
+          #tabItem(tabName = "data",
+          #        mod_data_ui("data_1")
+          #),
+          #tabItem(tabName = "model",
+          #        mod_model_ui("model_1")
+          #)
+        )
+      )
     )
   )
 }
