@@ -1,3 +1,24 @@
-.Rproj.user
+# R-specific
 .Rhistory
+.RData
+.Rproj.user/
 .Rprofile
+
+# IDEs
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+
+# Build artifacts
+*.tar.gz
+*.Rcheck/
+
+# renv: keep lockfile and metadata, ignore machine-specific stuff
+renv/library/
+renv/python/
+renv/staging/
+
+# Shiny runtime logs
+logs/
