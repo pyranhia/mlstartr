@@ -18,6 +18,48 @@ output: github_document
 <!-- badges: start -->
 <!-- badges: end -->
 
+## Road map
+
+### Objectif
+Créer une application Shiny pour initier les utilisateurs au machine learning via une interface interactive.
+
+### Fonctionnalités principales
+
+#### Tab 1 : Présentation de l’application
+- [ ] Texte de présentation
+- [ ] Illustrations
+- [ ] Définitions liées au ML
+
+#### Tab 2 : Choix du dataset
+- [ ] Choix du dataset parmi une sélection (e.g. mtcars, iris, penguins)
+- [ ] Sélection variable cible et prédicteurs
+
+#### Tab 3 : Exploration des données
+- [ ] Statistiques descriptives
+- [ ] Visualisations
+
+#### Tab 4 : Prétraitement
+- [ ] Transformations (normalisation, factorisation)
+- [ ] Séparation train/test
+
+#### Tab 5 : Modélisation
+- [ ] Choix du modèle (RF, etc.)
+- [ ] Entraînement
+
+#### Tab 6 : Évaluation et interprétation
+- [ ] Prédiction sur test set
+- [ ] Mesures de performance
+- [ ] Interprétation
+
+#### Tab 7 : Export
+- [ ] Génération du code R correspondant
+
+## Notes
+
+- Verrouillage des onglets tant que l’étape précédente n’est pas validée
+
+- Utilisation de `{tidymodels}`
+
 ## Installation
 
 You can install the development version of `{mlstartr}` like so:
