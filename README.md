@@ -57,6 +57,17 @@ learning via une interface interactive.
 
 - Utilisation de `{tidymodels}`
 
+## Checklist de tests pour l’application
+
+| Test                        | Fréquence        | Commande clé           |
+|-----------------------------|------------------|------------------------|
+| Vérification du package     | Régulièrement    | `devtools::check()`    |
+| Lancement de l’app          | En continu       | `golem::run_dev()`     |
+| Tests unitaires             | À chaque feature | `devtools::test()`     |
+| Build et install du package | Avant release    | `devtools::build()`    |
+| Docker / déploiement        | Avant push prod  | `docker build` / `run` |
+| Tests UI / navigateurs      | Manuellement     | Test visuel            |
+
 ## Installation
 
 You can install the development version of `{mlstartr}` like so:
@@ -81,7 +92,7 @@ This README has been compiled on the
 
 ``` r
 Sys.time()
-#> [1] "2025-05-27 16:55:08 BST"
+#> [1] "2025-05-29 20:27:29 BST"
 ```
 
 Here are the tests results and package coverage:
@@ -97,7 +108,7 @@ devtools::check(quiet = TRUE)
 #> 
 #>     box
 #> ── R CMD check results ──────────────────────────────── mlstartr 0.0.0.9000 ────
-#> Duration: 4.3s
+#> Duration: 4.8s
 #> 
 #> ❯ checking whether package ‘mlstartr’ can be installed ... ERROR
 #>   See below...
@@ -115,7 +126,7 @@ devtools::check(quiet = TRUE)
 #> Error: unable to load R code in package ‘mlstartr’
 #> Execution halted
 #> ERROR: lazy loading failed for package ‘mlstartr’
-#> * removing ‘/private/var/folders/df/r183kjzj43q4wbz7v4_s9hsm0000gn/T/RtmpZXtrgI/file7f37578ed973/mlstartr.Rcheck/mlstartr’
+#> * removing ‘/private/var/folders/df/r183kjzj43q4wbz7v4_s9hsm0000gn/T/RtmpbXXXza/filed0b87f3612ee/mlstartr.Rcheck/mlstartr’
 #> 
 #> 1 error ✖ | 0 warnings ✔ | 0 notes ✔
 #> Error: R CMD check found ERRORs
@@ -123,7 +134,7 @@ devtools::check(quiet = TRUE)
 
 ``` r
 covr::package_coverage()
-#> Error: Failure in `/private/var/folders/df/r183kjzj43q4wbz7v4_s9hsm0000gn/T/RtmpZXtrgI/R_LIBS7f37542a78bc/mlstartr/mlstartr-tests/testthat.Rout.fail`
+#> Error: Failure in `/private/var/folders/df/r183kjzj43q4wbz7v4_s9hsm0000gn/T/RtmpbXXXza/R_LIBSd0b855901ebf/mlstartr/mlstartr-tests/testthat.Rout.fail`
 #> `dashboardPage(dashboardHeader(title = "MLstartr"), dashboardSidebar(sidebarMenu(id = "tabs", 
 #>     menuItem("Introduction", tabName = "intro"))), dashboardBody(tabItems(tabItem(tabName = "intro", 
 #>     mod_intro_ui("intro_1")))))`: could not find function "dashboardPage"

@@ -60,6 +60,18 @@ Créer une application Shiny pour initier les utilisateurs au machine learning v
 
 - Utilisation de `{tidymodels}`
 
+## Checklist de tests pour l’application
+
+| Test                              | Fréquence       | Commande clé                     |
+|-----------------------------------|------------------|----------------------------------|
+| Vérification du package           | Régulièrement    | `devtools::check()`             |
+| Lancement de l'app                | En continu       | `golem::run_dev()`              |
+| Tests unitaires                   | À chaque feature | `devtools::test()`              |
+| Build et install du package       | Avant release    | `devtools::build()`             |
+| Docker / déploiement              | Avant push prod  | `docker build` / `run`          |
+| Tests UI / navigateurs            | Manuellement     | Test visuel                     |
+
+
 ## Installation
 
 You can install the development version of `{mlstartr}` like so:
