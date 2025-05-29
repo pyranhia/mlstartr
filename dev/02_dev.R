@@ -22,6 +22,7 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "intro", with_test = TRUE) # Name of the module
 golem::add_module(name = "dataset", with_test = TRUE) # Name of the module
+golem::add_module(name = "variables", with_test = TRUE) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

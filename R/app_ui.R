@@ -23,15 +23,33 @@ app_ui <- function(request) {
       ),
       shinydashboard::dashboardBody(
         shinydashboard::tabItems(
-          shinydashboard::tabItem(tabName = "intro",
-                  mod_intro_ui("intro_1")
+
+          shinydashboard::tabItem(
+            tabName = "intro",
+            mod_intro_ui("intro_1")
           ),
-          shinydashboard::tabItem(tabName = "data",
-                  mod_dataset_ui("dataset_1")
+
+          shinydashboard::tabItem(
+            tabName = "data",
+            fluidRow(
+              shinydashboard::box(
+                width = 12,
+                title = "1. Choix du jeu de données",
+                status = "primary",
+                solidHeader = TRUE,
+                mod_dataset_ui("dataset_1")
+              )
+            ),
+            fluidRow(
+              shinydashboard::box(
+                width = 12,
+                title = "2. Sélection des variables",
+                status = "info",
+                solidHeader = TRUE,
+                mod_variables_ui("vars_1")
+              )
+            )
           )
-          #shinydashboard::tabItem(tabName = "model",
-          #        mod_model_ui("model_1")
-          #)
         )
       )
     )
