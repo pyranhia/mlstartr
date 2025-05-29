@@ -27,8 +27,8 @@ mod_dataset_server <- function(id) {
 
     dataset_r <- reactive({
       switch(input$dataset,
-             "iris" = iris,
-             "mtcars" = mtcars,
+             "iris" = datasets::iris,
+             "mtcars" = datasets::mtcars,
              "penguins" = {
                if (!requireNamespace("palmerpenguins", quietly = TRUE)) {
                  stop("Le package {palmerpenguins} n'est pas installé.")
