@@ -8,6 +8,7 @@ License: MIT + file LICENSE
 Imports: 
     config,
     golem,
+    palmerpenguins,
     shiny,
     shinydashboard
 Encoding: UTF-8

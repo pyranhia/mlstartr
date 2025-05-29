@@ -16,8 +16,8 @@ app_ui <- function(request) {
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
           id = "tabs",
-          shinydashboard::menuItem("Introduction", tabName = "intro")
-          #shinydashboard::menuItem("Données", tabName = "data", disabled = TRUE)
+          shinydashboard::menuItem("Introduction", tabName = "intro"),
+          shinydashboard::menuItem("Données", tabName = "data")
           #shinydashboard::menuItem("Modèle", tabName = "model", disabled = TRUE)
         )
       ),
@@ -25,10 +25,10 @@ app_ui <- function(request) {
         shinydashboard::tabItems(
           shinydashboard::tabItem(tabName = "intro",
                   mod_intro_ui("intro_1")
+          ),
+          shinydashboard::tabItem(tabName = "data",
+                  mod_dataset_ui("dataset_1")
           )
-          #shinydashboard::tabItem(tabName = "data",
-          #        mod_data_ui("data_1")
-          #),
           #shinydashboard::tabItem(tabName = "model",
           #        mod_model_ui("model_1")
           #)
