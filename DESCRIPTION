@@ -7,6 +7,7 @@ Description: Une application Shiny pédagogique pour s’initier pas à pas au m
 License: MIT + file LICENSE
 Imports: 
     config,
+    DT,
     golem,
     palmerpenguins,
     shiny,

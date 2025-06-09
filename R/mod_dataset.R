@@ -15,7 +15,8 @@ mod_dataset_ui <- function(id) {
       ns("dataset"),
       "Jeu de données disponible :",
       choices = c("iris", "mtcars", "penguins")
-    )
+    ),
+    DT::DTOutput(ns("dataset_table"))  # Print chosen dataset
   )
 }
 
@@ -36,6 +37,12 @@ mod_dataset_server <- function(id) {
                palmerpenguins::penguins
              }
       )
+    })
+
+    # print dataset in datatable
+    output$dataset_table <- DT::renderDT({
+      req(dataset_r())
+      DT::datatable(dataset_r(), options = list(pageLength = 5))
     })
 
     return(dataset_r)  # utile pour les modules suivants
