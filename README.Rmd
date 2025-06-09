@@ -31,8 +31,11 @@ Créer une application Shiny pour initier les utilisateurs au machine learning v
 - [ ] Définitions liées au ML
 
 #### Tab 2 : Choix du dataset
-- [ ] Choix du dataset parmi une sélection (e.g. mtcars, iris, penguins)
-- [ ] Sélection variable cible et prédicteurs
+- [x] Choix du dataset parmi une sélection (e.g. mtcars, iris, penguins)
+- [ ] Pré-traiter les datasets pour avoir les bons types de variables
+- [x] Sélection variable cible et prédicteurs
+- [ ] Retirer la variable cible de la liste des prédicteurs possibles
+- [ ] Bouton de validation de la configuration et déverouillage de l’onglet suivant
 
 #### Tab 3 : Exploration des données
 - [ ] Statistiques descriptives

@@ -23,8 +23,12 @@ learning via une interface interactive.
 
 #### Tab 2 : Choix du dataset
 
-- [ ] Choix du dataset parmi une sélection (e.g. mtcars, iris, penguins)
-- [ ] Sélection variable cible et prédicteurs
+- [x] Choix du dataset parmi une sélection (e.g. mtcars, iris, penguins)
+- [ ] Pré-traiter les datasets pour avoir les bons types de variables
+- [x] Sélection variable cible et prédicteurs
+- [ ] Retirer la variable cible de la liste des prédicteurs possibles
+- [ ] Bouton de validation de la configuration et déverouillage de
+  l’onglet suivant
 
 #### Tab 3 : Exploration des données
 
@@ -92,7 +96,7 @@ This README has been compiled on the
 
 ``` r
 Sys.time()
-#> [1] "2025-05-29 20:27:29 BST"
+#> [1] "2025-06-09 10:17:30 BST"
 ```
 
 Here are the tests results and package coverage:
@@ -100,51 +104,40 @@ Here are the tests results and package coverage:
 ``` r
 devtools::check(quiet = TRUE)
 #> ℹ Loading mlstartr
-#> 
-#> Attaching package: 'shinydashboard'
-#> 
-#> 
-#> The following object is masked from 'package:graphics':
-#> 
-#>     box
 #> ── R CMD check results ──────────────────────────────── mlstartr 0.0.0.9000 ────
-#> Duration: 4.8s
+#> Duration: 33.9s
 #> 
-#> ❯ checking whether package ‘mlstartr’ can be installed ... ERROR
-#>   See below...
+#> ❯ checking code files for non-ASCII characters ... WARNING
+#>   Found the following files with non-ASCII characters:
+#>     R/app_ui.R
+#>     R/mod_dataset.R
+#>     R/mod_intro.R
+#>     R/mod_validate_conf.R
+#>     R/mod_variables.R
+#>   Portable packages must use only ASCII characters in their R code and
+#>   NAMESPACE directives, except perhaps in comments.
+#>   Use \uxxxx escapes for other characters.
+#>   Function ‘tools::showNonASCIIfile’ can help in finding non-ASCII
+#>   characters in files.
 #> 
-#> ── Install failure ─────────────────────────────────────────────────────────────
+#> ❯ checking dependencies in R code ... WARNING
+#>   '::' or ':::' import not declared from: ‘shinyjs’
 #> 
-#> * installing *source* package ‘mlstartr’ ...
-#> ** this is package ‘mlstartr’ version ‘0.0.0.9000’
-#> ** using staged installation
-#> ** R
-#> ** inst
-#> ** byte-compile and prepare package for lazy loading
-#> Error in library(shinydashboard) : 
-#>   there is no package called ‘shinydashboard’
-#> Error: unable to load R code in package ‘mlstartr’
-#> Execution halted
-#> ERROR: lazy loading failed for package ‘mlstartr’
-#> * removing ‘/private/var/folders/df/r183kjzj43q4wbz7v4_s9hsm0000gn/T/RtmpbXXXza/filed0b87f3612ee/mlstartr.Rcheck/mlstartr’
-#> 
-#> 1 error ✖ | 0 warnings ✔ | 0 notes ✔
-#> Error: R CMD check found ERRORs
+#> 0 errors ✔ | 2 warnings ✖ | 0 notes ✔
+#> Error: R CMD check found WARNINGs
 ```
 
 ``` r
 covr::package_coverage()
-#> Error: Failure in `/private/var/folders/df/r183kjzj43q4wbz7v4_s9hsm0000gn/T/RtmpbXXXza/R_LIBSd0b855901ebf/mlstartr/mlstartr-tests/testthat.Rout.fail`
-#> `dashboardPage(dashboardHeader(title = "MLstartr"), dashboardSidebar(sidebarMenu(id = "tabs", 
-#>     menuItem("Introduction", tabName = "intro"))), dashboardBody(tabItems(tabItem(tabName = "intro", 
-#>     mod_intro_ui("intro_1")))))`: could not find function "dashboardPage"
-#> Backtrace:
-#>     ▆
-#>  1. └─mlstartr:::app_ui() at test-golem-recommended.R:2:3
-#>  2.   └─htmltools::tagList(...)
-#>  3.     └─rlang::dots_list(...) at htmltools/R/tags.R:275:3
-#> 
-#> [ FAIL 1 | WARN 0 | SKIP 1 | PASS 88 ]
-#> Error: Test failures
-#> Execution halted
+#> mlstartr Coverage: 79.08%
+#> R/run_app.R: 0.00%
+#> R/mod_variables.R: 47.76%
+#> R/mod_validate_conf.R: 53.12%
+#> R/mod_dataset.R: 79.31%
+#> R/app_config.R: 100.00%
+#> R/app_server.R: 100.00%
+#> R/app_ui.R: 100.00%
+#> R/golem_utils_server.R: 100.00%
+#> R/golem_utils_ui.R: 100.00%
+#> R/mod_intro.R: 100.00%
 ```
