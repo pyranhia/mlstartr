@@ -19,7 +19,12 @@ app_server <- function(input, output, session) {
   exploration   <- mod_exploration_server("exploration_1", dataset_r = dataset, vars_r = vars)
   pretraitement <- mod_pretraitement_server("pretraitement_1", dataset_r = dataset, vars_r = vars)
   modelisation  <- mod_modelisation_server("modelisation_1", pretraitement_r = pretraitement, vars_r = vars)
-  mod_evaluation_server("evaluation_1")
+  mod_evaluation_server(
+    "evaluation_1",
+    pretraitement_r = pretraitement,
+    modelisation_r  = modelisation,
+    vars_r          = vars
+  )
 
   # Verrouillage des onglets
   observeEvent(vars$validated(), {
