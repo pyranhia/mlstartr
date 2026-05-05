@@ -8,6 +8,7 @@ License: MIT + file LICENSE
 Imports: 
     bslib,
     config,
+    datapyranhia (>= 0.0.0.9000),
     dplyr,
     DT,
     ggplot2,
@@ -32,3 +33,5 @@ Suggests:
     shinydashboard
 Config/testthat/edition: 3
 Language: en-US
+Remotes:  
+    pyranhia/datapyranhia

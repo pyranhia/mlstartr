@@ -5,49 +5,67 @@
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
-#'
 #' @importFrom shiny NS tagList
 mod_dataset_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h3("Choisir un jeu de données"),
     selectInput(
       ns("dataset"),
-      "Jeu de données disponible :",
-      choices = c("iris", "mtcars", "penguins")
+      "Jeu de donn\u00e9es :",
+      choices = c(
+        "California Housing (r\u00e9gression)"   = "housing",
+        "Titanic (classification binaire)"      = "titanic",
+        "Penguins (classification multiclasse)" = "penguins"
+      )
     ),
-    DT::DTOutput(ns("dataset_table"))  # Print chosen dataset
+    DT::DTOutput(ns("dataset_table"))
   )
 }
 
 #' dataset Server Functions
 #'
 #' @noRd
+#' @importFrom dplyr mutate
 mod_dataset_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
+    # Variables exposees par dataset
+    housing_vars  <- c("median_house_value", "median_income", "housing_median_age",
+                       "total_rooms", "total_bedrooms", "population",
+                       "households", "ocean_proximity")
+    titanic_vars  <- c("survived", "pclass", "sex", "age", "fare", "sibsp", "parch")
+    penguins_vars <- c("species", "bill_length_mm", "bill_depth_mm",
+                       "flipper_length_mm", "body_mass_g", "sex")
+
     dataset_r <- reactive({
       switch(input$dataset,
-             "iris" = datasets::iris,
-             "mtcars" = datasets::mtcars,
+             "housing" = {
+               e <- new.env()
+               data("housing", package = "datapyranhia", envir = e)
+               e$housing[, housing_vars]
+             },
+             "titanic" = {
+               e <- new.env()
+               data("titanic", package = "datapyranhia", envir = e)
+               e$titanic[, titanic_vars] |>
+                 dplyr::mutate(survived = factor(survived, levels = c(0, 1),
+                                                 labels = c("non", "oui")))
+             },
              "penguins" = {
-               if (!requireNamespace("palmerpenguins", quietly = TRUE)) {
-                 stop("Le package {palmerpenguins} n'est pas installé.")
-               }
-               palmerpenguins::penguins
+               palmerpenguins::penguins[, penguins_vars]
              }
       )
     })
 
-    # print dataset in datatable
     output$dataset_table <- DT::renderDT({
       req(dataset_r())
       DT::datatable(dataset_r(), options = list(pageLength = 5))
     })
 
-    return(dataset_r)  # utile pour les modules suivants
+    return(dataset_r)
   })
 }
+
 ## To be copied in the UI
 # mod_dataset_ui("dataset_1")
 
