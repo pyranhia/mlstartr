@@ -14,6 +14,10 @@ mod_exploration_ui <- function(id) {
         plotOutput(ns("target_plot"))
       ),
       bslib::card(
+        bslib::card_header("Transformation de la variable r\u00e9ponse"),
+        uiOutput(ns("transformation_section"))
+      ),
+      bslib::card(
         bslib::card_header("Statistiques descriptives des pr\u00e9dicteurs"),
         DT::DTOutput(ns("desc_stats"))
       ),
@@ -70,6 +74,58 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
           labs(x = target_col, y = "Effectif") +
           base_theme()
       }
+    })
+
+    # Transformation de la cible (regression uniquement)
+    output$transformation_section <- renderUI({
+      req(vars_r$task_type())
+      if (vars_r$task_type() != "regression") return(NULL)
+
+      tagList(
+        selectInput(
+          ns("transformation"),
+          "Transformation :",
+          choices = c(
+            "Aucune"         = "none",
+            "Racine carr\u00e9e" = "sqrt",
+            "Logarithme"     = "log"
+          )
+        ),
+        bslib::layout_columns(
+          col_widths = c(6, 6),
+          plotOutput(ns("target_before")),
+          plotOutput(ns("target_after"))
+        )
+      )
+    })
+
+    output$target_before <- renderPlot({
+      req(selected_data(), vars_r$target())
+      df         <- selected_data()
+      target_col <- vars_r$target()
+
+      ggplot(df, aes(x = .data[[target_col]])) +
+        geom_histogram(fill = "#6BAED6", color = "white", bins = 30) +
+        labs(title = "Avant transformation", x = target_col, y = "Effectif") +
+        base_theme()
+    })
+
+    output$target_after <- renderPlot({
+      req(selected_data(), vars_r$target(), input$transformation)
+      df         <- selected_data()
+      target_col <- vars_r$target()
+      transf     <- input$transformation
+
+      df[[target_col]] <- switch(transf,
+                                 "sqrt" = sqrt(df[[target_col]]),
+                                 "log"  = log(df[[target_col]]),
+                                 df[[target_col]]
+      )
+
+      ggplot(df, aes(x = .data[[target_col]])) +
+        geom_histogram(fill = "#00A896", color = "white", bins = 30) +
+        labs(title = "Apr\u00e8s transformation", x = target_col, y = "Effectif") +
+        base_theme()
     })
 
     # Stats descriptives des predicteurs
@@ -142,7 +198,10 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       validated(FALSE)
     })
 
-    return(list(validated = validated))
+    return(list(
+      validated      = validated,
+      transformation = reactive(input$transformation)
+    ))
   })
 }
 
