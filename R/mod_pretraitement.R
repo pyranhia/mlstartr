@@ -41,8 +41,8 @@ mod_pretraitement_ui <- function(id) {
 #'
 #' @noRd
 #' @importFrom recipes recipe step_impute_median step_normalize step_dummy
-#'   step_log step_sqrt all_numeric_predictors all_nominal_predictors
-#'   all_outcomes
+#'   step_log step_sqrt step_unknown all_numeric_predictors
+#'   all_nominal_predictors all_outcomes
 #' @importFrom rsample initial_split training testing
 #' @importFrom stats as.formula
 mod_pretraitement_server <- function(id, dataset_r, vars_r) {
@@ -51,8 +51,11 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
 
     # Resume du split
     output$split_summary <- renderUI({
-      req(dataset_r(), input$split_prop)
-      n       <- nrow(dataset_r())
+      req(dataset_r(), input$split_prop, vars_r$target())
+      req(vars_r$target() %in% names(dataset_r()))
+      df      <- dataset_r()
+      df      <- df[!is.na(df[[vars_r$target()]]), ]
+      n       <- nrow(df)
       prop    <- as.numeric(input$split_prop)
       n_train <- round(n * prop)
       n_test  <- n - n_train
@@ -72,20 +75,22 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
           ns("transformation"),
           "Transformation :",
           choices = c(
-            "Aucune"          = "none",
+            "Aucune"           = "none",
             "Racine carr\u00e9e" = "sqrt",
-            "Logarithme"      = "log"
+            "Logarithme"       = "log"
           ),
           selected = "none"
         )
       } else {
-        p(class = "text-muted", "Aucune transformation disponible pour la classification.")
+        p(class = "text-muted",
+          "Aucune transformation disponible pour la classification.")
       }
     })
 
     # Options predicteurs
     output$predictors_options <- renderUI({
       req(dataset_r(), vars_r$predictors())
+      req(all(vars_r$predictors() %in% names(dataset_r())))
       df      <- dataset_r()[, vars_r$predictors(), drop = FALSE]
       has_nas <- any(is.na(df))
       has_cat <- any(sapply(df, function(x) is.character(x) | is.factor(x)))
@@ -110,10 +115,13 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
       )
     })
 
-    # Split train/test
+    # Split train/test (NAs de la cible retires)
     split_r <- reactive({
-      req(dataset_r(), input$split_prop)
-      rsample::initial_split(dataset_r(), prop = as.numeric(input$split_prop))
+      req(dataset_r(), input$split_prop, vars_r$target())
+      req(vars_r$target() %in% names(dataset_r()))
+      df <- dataset_r()
+      df <- df[!is.na(df[[vars_r$target()]]), ]
+      rsample::initial_split(df, prop = as.numeric(input$split_prop))
     })
 
     train_r <- reactive(rsample::training(split_r()))
@@ -122,6 +130,9 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
     # Construction de la recette
     recipe_r <- reactive({
       req(train_r(), vars_r$target(), vars_r$predictors())
+      req(vars_r$target() %in% names(train_r()))
+      req(all(vars_r$predictors() %in% names(train_r())))
+
       df      <- dataset_r()[, vars_r$predictors(), drop = FALSE]
       has_nas <- any(is.na(df))
       has_cat <- any(sapply(df, function(x) is.character(x) | is.factor(x)))
@@ -152,7 +163,9 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
 
       # Encodage categoriel
       if (has_cat) {
-        rec <- rec |> recipes::step_dummy(recipes::all_nominal_predictors())
+        rec <- rec |>
+          recipes::step_unknown(recipes::all_nominal_predictors()) |>
+          recipes::step_dummy(recipes::all_nominal_predictors())
       }
 
       rec
