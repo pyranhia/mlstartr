@@ -29,9 +29,20 @@ app_server <- function(input, output, session) {
     }
   })
 
+  observeEvent(exploration$validated(), {
+    if (isTRUE(exploration$validated())) {
+      bslib::nav_show(id = "tabs", target = "pretraitement")
+      bslib::nav_select(id = "tabs", selected = "pretraitement")
+    } else {
+      bslib::nav_hide(id = "tabs", target = "pretraitement")
+      bslib::nav_hide(id = "tabs", target = "modelisation")
+      bslib::nav_hide(id = "tabs", target = "evaluation")
+    }
+  })
+
   # Modules tabs suivants (stubs pour l'instant)
   mod_intro_server("intro_1")
-  mod_exploration_server("exploration_1")
+  exploration <- mod_exploration_server("exploration_1", dataset_r = dataset, vars_r = vars)
   mod_pretraitement_server("pretraitement_1")
   mod_modelisation_server("modelisation_1")
   mod_evaluation_server("evaluation_1")

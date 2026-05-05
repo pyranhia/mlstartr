@@ -9,8 +9,10 @@ Imports:
     bslib,
     config,
     DT,
+    ggplot2,
     golem,
     palmerpenguins,
+    rlang,
     shiny
 Encoding: UTF-8
 LazyData: true
