@@ -1,11 +1,9 @@
 #' variables UI Function
 #'
-#' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
-#'
+#' @importFrom stats setNames
 #' @importFrom shiny NS tagList
 mod_variables_ui <- function(id) {
   ns <- NS(id)
@@ -13,7 +11,10 @@ mod_variables_ui <- function(id) {
     h3("Sélectionner des variables"),
     uiOutput(ns("target_ui")),
     uiOutput(ns("predictors_ui")),
-    textOutput(ns("task_type"))
+    textOutput(ns("task_type")),
+    hr(),
+    actionButton(ns("validate"), "Valider la configuration",
+                 class = "btn-primary")
   )
 }
 
@@ -24,86 +25,75 @@ mod_variables_server <- function(id, dataset_r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Function to classify variables by type
-    classify_variables <- function(data) {
-      continuous_vars <- c()
-      discrete_vars <- c()
+    # Classify variables by type (numeric vs categorical)
+    classify_variables <- function(data, exclude = NULL) {
+      vars <- setdiff(names(data), exclude)
+      continuous_vars <- vars[sapply(data[vars], is.numeric)]
+      discrete_vars   <- vars[!sapply(data[vars], is.numeric)]
 
-      for (var_name in names(data)) {
-        if (is.numeric(data[[var_name]])) {
-          continuous_vars <- c(continuous_vars, var_name)
-        } else {
-          discrete_vars <- c(discrete_vars, var_name)
-        }
-      }
-
-      # Generate choice structure for selectInput
       choices_list <- list()
-
       if (length(continuous_vars) > 0) {
-        # Generate named vector for continuous variables
-        cont_choices <- continuous_vars
-        names(cont_choices) <- continuous_vars
-        choices_list[["Variables continues"]] <- cont_choices
+        choices_list[["Variables continues"]] <- setNames(continuous_vars, continuous_vars)
       }
-
       if (length(discrete_vars) > 0) {
-        # Generate named vector for discrete variables
-        disc_choices <- discrete_vars
-        names(disc_choices) <- discrete_vars
-        choices_list[["Variables discrètes"]] <- disc_choices
+        choices_list[["Variables discretes"]] <- setNames(discrete_vars, discrete_vars)
       }
-
-      return(choices_list)
+      choices_list
     }
 
-    # Dynamically generate variable names once the dataset has been loaded
+    # When dataset changes, reset target selector
     observeEvent(dataset_r(), {
       choices_grouped <- classify_variables(dataset_r())
 
       output$target_ui <- renderUI({
-        selectInput(ns("target"),
-                    "Variable réponse :",
+        selectInput(ns("target"), "Variable reponse :",
                     choices = choices_grouped)
-      })
-
-      output$predictors_ui <- renderUI({
-        selectInput(ns("predictors"),
-                    "Variables prédictives :",
-                    choices = choices_grouped,
-                    multiple = TRUE)
       })
     })
 
-    # Deduce the type of learning (regression vs classification)
+    # When target changes, update predictors (exclude target)
+    observeEvent(input$target, {
+      req(input$target)
+      choices_grouped <- classify_variables(dataset_r(), exclude = input$target)
+
+      output$predictors_ui <- renderUI({
+        selectInput(ns("predictors"), "Variables predictives :",
+                    choices = choices_grouped,
+                    multiple = TRUE,
+                    selected = names(unlist(choices_grouped)))
+      })
+    })
+
+    # Detect task type
     task_type <- reactive({
       req(input$target)
       target_col <- dataset_r()[[input$target]]
-      if (is.numeric(target_col) && !is.factor(target_col)) {
-        "régression"
-      } else {
-        "classification"
-      }
+      if (is.numeric(target_col) && !is.factor(target_col)) "regression" else "classification"
     })
 
     output$task_type <- renderText({
       req(task_type())
-      paste("Type de tâche détecté :", task_type())
+      paste("Type de tache detecte :", task_type())
     })
 
-    return(
-      list(
-        target = reactive(input$target),
-        predictors = reactive(input$predictors),
-        task_type = task_type
-      )
-    )
+    # Validation flag
+    validated <- reactiveVal(FALSE)
+
+    observeEvent(input$validate, {
+      req(input$target, input$predictors)
+      validated(TRUE)
+    })
+
+    # Reset validation if dataset or target changes
+    observeEvent(list(dataset_r(), input$target), {
+      validated(FALSE)
+    })
+
+    return(list(
+      target     = reactive(input$target),
+      predictors = reactive(input$predictors),
+      task_type  = task_type,
+      validated  = validated
+    ))
   })
 }
-
-
-## To be copied in the UI
-# mod_variables_ui("variables_1")
-
-## To be copied in the server
-# mod_variables_server("variables_1")
