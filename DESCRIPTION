@@ -12,7 +12,9 @@ Imports:
     ggplot2,
     golem,
     palmerpenguins,
+    recipes,
     rlang,
+    rsample,
     shiny
 Encoding: UTF-8
 LazyData: true

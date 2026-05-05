@@ -11,11 +11,8 @@ mod_exploration_ui <- function(id) {
       col_widths = c(6, 6),
       bslib::card(
         bslib::card_header("Distribution de la variable r\u00e9ponse"),
+        uiOutput(ns("target_options")),
         plotOutput(ns("target_plot"))
-      ),
-      bslib::card(
-        bslib::card_header("Transformation de la variable r\u00e9ponse"),
-        uiOutput(ns("transformation_section"))
       ),
       bslib::card(
         bslib::card_header("Statistiques descriptives des pr\u00e9dicteurs"),
@@ -29,7 +26,8 @@ mod_exploration_ui <- function(id) {
     hr(),
     div(
       style = "text-align: center; margin-top: 1rem;",
-      actionButton(ns("validate"), "Valider et passer au pr\u00e9traitement", class = "btn-primary btn-lg")
+      actionButton(ns("validate"), "Valider et passer au pr\u00e9traitement",
+                   class = "btn-primary btn-lg")
     )
   )
 }
@@ -50,10 +48,21 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       theme_minimal(base_size = 14)
     }
 
-    # Dataset filtre sur les variables selectionnees
     selected_data <- reactive({
       req(dataset_r(), vars_r$target(), vars_r$predictors())
       dataset_r()[, c(vars_r$target(), vars_r$predictors()), drop = FALSE]
+    })
+
+    # Option transformation axe X (visuelle uniquement)
+    output$target_options <- renderUI({
+      req(vars_r$task_type())
+      if (vars_r$task_type() != "regression") return(NULL)
+      selectInput(
+        ns("axis_transform"),
+        "Transformation de l'axe X (visualisation uniquement) :",
+        choices = c("Aucune" = "none", "Racine carr\u00e9e" = "sqrt", "Logarithme" = "log"),
+        selected = "none"
+      )
     })
 
     # Distribution de la variable cible
@@ -64,9 +73,22 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       df         <- selected_data()
 
       if (task == "regression") {
+        x_vals <- df[[target_col]]
+        transf <- if (!is.null(input$axis_transform)) input$axis_transform else "none"
+        x_vals <- switch(transf,
+                         "sqrt" = sqrt(x_vals),
+                         "log"  = log(x_vals),
+                         x_vals
+        )
+        df[[target_col]] <- x_vals
+        x_label <- switch(transf,
+                          "sqrt" = paste("sqrt(", target_col, ")"),
+                          "log"  = paste("log(", target_col, ")"),
+                          target_col
+        )
         ggplot(df, aes(x = .data[[target_col]])) +
           geom_histogram(fill = "#6BAED6", color = "white", bins = 30) +
-          labs(x = target_col, y = "Effectif") +
+          labs(x = x_label, y = "Effectif") +
           base_theme()
       } else {
         ggplot(df, aes(x = .data[[target_col]])) +
@@ -76,59 +98,7 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       }
     })
 
-    # Transformation de la cible (regression uniquement)
-    output$transformation_section <- renderUI({
-      req(vars_r$task_type())
-      if (vars_r$task_type() != "regression") return(NULL)
-
-      tagList(
-        selectInput(
-          ns("transformation"),
-          "Transformation :",
-          choices = c(
-            "Aucune"         = "none",
-            "Racine carr\u00e9e" = "sqrt",
-            "Logarithme"     = "log"
-          )
-        ),
-        bslib::layout_columns(
-          col_widths = c(6, 6),
-          plotOutput(ns("target_before")),
-          plotOutput(ns("target_after"))
-        )
-      )
-    })
-
-    output$target_before <- renderPlot({
-      req(selected_data(), vars_r$target())
-      df         <- selected_data()
-      target_col <- vars_r$target()
-
-      ggplot(df, aes(x = .data[[target_col]])) +
-        geom_histogram(fill = "#6BAED6", color = "white", bins = 30) +
-        labs(title = "Avant transformation", x = target_col, y = "Effectif") +
-        base_theme()
-    })
-
-    output$target_after <- renderPlot({
-      req(selected_data(), vars_r$target(), input$transformation)
-      df         <- selected_data()
-      target_col <- vars_r$target()
-      transf     <- input$transformation
-
-      df[[target_col]] <- switch(transf,
-                                 "sqrt" = sqrt(df[[target_col]]),
-                                 "log"  = log(df[[target_col]]),
-                                 df[[target_col]]
-      )
-
-      ggplot(df, aes(x = .data[[target_col]])) +
-        geom_histogram(fill = "#00A896", color = "white", bins = 30) +
-        labs(title = "Apr\u00e8s transformation", x = target_col, y = "Effectif") +
-        base_theme()
-    })
-
-    # Stats descriptives des predicteurs
+    # Stats descriptives
     output$desc_stats <- DT::renderDT({
       req(selected_data(), vars_r$predictors())
       df       <- selected_data()[, vars_r$predictors(), drop = FALSE]
@@ -151,7 +121,7 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
         DT::formatRound(columns = c("Min", "Moyenne", "Mediane", "Max"), digits = 2)
     })
 
-    # Matrice de correlation (si au moins 2 predicteurs numeriques)
+    # Matrice de correlation
     output$corr_section <- renderUI({
       req(selected_data(), vars_r$predictors())
       df       <- selected_data()[, vars_r$predictors(), drop = FALSE]
@@ -186,6 +156,7 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
         base_theme() +
         theme(axis.text.x = element_text(angle = 45, hjust = 1))
     })
+
     # Validation
     validated <- reactiveVal(FALSE)
 
@@ -193,15 +164,11 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       validated(TRUE)
     })
 
-    # Reset si les donnees changent
     observeEvent(list(dataset_r(), vars_r$target(), vars_r$predictors()), {
       validated(FALSE)
     })
 
-    return(list(
-      validated      = validated,
-      transformation = reactive(input$transformation)
-    ))
+    return(list(validated = validated))
   })
 }
 
