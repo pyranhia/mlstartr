@@ -41,7 +41,7 @@ mod_pretraitement_ui <- function(id) {
 #'
 #' @noRd
 #' @importFrom recipes recipe step_impute_median step_normalize step_dummy
-#'   step_log step_sqrt step_unknown all_numeric_predictors
+#'   step_mutate step_unknown all_numeric_predictors
 #'   all_nominal_predictors all_outcomes
 #' @importFrom rsample initial_split training testing
 #' @importFrom stats as.formula
@@ -146,9 +146,15 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
       } else "none"
 
       if (transf == "log") {
-        rec <- rec |> recipes::step_log(recipes::all_outcomes())
+        rec <- rec |> recipes::step_mutate(
+          !!vars_r$target() := log(!!rlang::sym(vars_r$target())),
+          skip = TRUE
+        )
       } else if (transf == "sqrt") {
-        rec <- rec |> recipes::step_sqrt(recipes::all_outcomes())
+        rec <- rec |> recipes::step_mutate(
+          !!vars_r$target() := sqrt(!!rlang::sym(vars_r$target())),
+          skip = TRUE
+        )
       }
 
       # Imputation
