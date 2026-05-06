@@ -25,8 +25,20 @@ app_ui <- function(request) {
       bslib::nav_panel(
         title = "Donn\u00e9es",
         value = "data",
+        bslib::card(
+          style = "background-color: #f0f7ff;",
+          bslib::card_body(
+            p(style = "font-size: 1rem; margin: 0;",
+              "Dans cette \u00e9tape, vous choisissez sur quoi vous allez travailler. Le ",
+              strong("jeu de donn\u00e9es"), " contient les exemples que l'algorithme va utiliser
+        pour apprendre. La ", strong("variable r\u00e9ponse"), " est ce que vous voulez pr\u00e9dire.
+        Les ", strong("variables pr\u00e9dictives"), " sont les informations utilis\u00e9es
+        pour faire la pr\u00e9diction.")
+          )
+        ),
+        br(),
         bslib::layout_columns(
-          col_widths = c(6, 6),
+          col_widths = c(8, 4),
           bslib::card(
             bslib::card_header("1. Choix du jeu de donn\u00e9es"),
             mod_dataset_ui("dataset_1")
@@ -82,6 +94,11 @@ golem_add_external_resources <- function() {
     bundle_resources(
       path = app_sys("app/www"),
       app_title = "mlstartr"
-    )
+    ),
+    tags$style(HTML("
+      .bslib-page-fill { overflow-y: auto !important; height: auto !important; }
+      .tab-content { overflow: visible !important; }
+      .tab-pane { overflow: visible !important; }
+    "))
   )
 }

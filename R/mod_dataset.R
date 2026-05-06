@@ -61,7 +61,16 @@ mod_dataset_server <- function(id) {
 
     output$dataset_table <- DT::renderDT({
       req(dataset_r())
-      DT::datatable(dataset_r(), options = list(pageLength = 5))
+      DT::datatable(
+        dataset_r(),
+        options = list(
+          pageLength = 5,
+          dom = "tip",
+          pagingType = "simple"
+        ),
+        rownames = FALSE,
+        class = "stripe hover"
+      )
     })
 
     return(dataset_r)
