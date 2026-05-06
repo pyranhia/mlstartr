@@ -139,6 +139,29 @@ mod_intro_ui <- function(id) {
         "C'est parti !",
         class = "btn-primary btn-lg"
       )
+    ),
+    br(),
+    br(),
+    div(
+      style = "text-align: center; padding: 1rem 0; color: #5A8AAD; font-size: 0.8rem;",
+      p(style = "margin-bottom: 0.5rem;",
+        "Cette application illustre les grandes \u00e9tapes d'un pipeline de machine learning supervis\u00e9. ",
+        "Elle est con\u00e7ue \u00e0 des fins p\u00e9dagogiques et ne couvre pas l'ensemble des cas d'usage r\u00e9els ",
+        "(tuning d'hyperparam\u00e8tres, validation crois\u00e9e, gestion avanc\u00e9e des donn\u00e9es...)."
+      ),
+      p(style = "margin-bottom: 0.5rem;",
+        "Vous voulez aller plus loin ? ",
+        tags$a(href = "https://pyranhia.eu/formations.html", target = "_blank",
+               style = "color: #00A896; text-decoration: underline;",
+               "D\u00e9couvrez les formations Pyranhia")
+      ),
+      p(style = "margin-top: 1rem; font-size: 0.8rem;",
+        "Une application p\u00e9dagogique ",
+        tags$a(href = "https://pyranhia.eu", target = "_blank",
+               style = "color: #00A896;",
+               "Pyranhia"),
+        " \u2014 2025"
+      )
     )
   )
 }
