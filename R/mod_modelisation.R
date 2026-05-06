@@ -8,19 +8,33 @@ mod_modelisation_ui <- function(id) {
   ns <- NS(id)
   tagList(
     bslib::card(
-      bslib::card_header("Param\u00e8tres du mod\u00e8le"),
-      sliderInput(
-        ns("n_trees"),
-        "Nombre d'arbres :",
-        min = 100, max = 500, value = 100, step = 50
-      ),
-      div(
-        style = "text-align: center; margin-top: 1rem;",
-        actionButton(ns("train"), "Entra\u00eener le mod\u00e8le",
-                     class = "btn-success btn-lg")
+      style = "background-color: #f0f7ff;",
+      bslib::card_body(
+        p(style = "font-size: 1rem; margin: 0;",
+          "Le ", strong("Random Forest"), " est un algorithme qui construit un grand nombre
+          d'arbres de d\u00e9cision et combine leurs pr\u00e9dictions. Plus le nombre d'arbres
+          est \u00e9lev\u00e9, plus le mod\u00e8le est stable, mais plus l'entra\u00eenement est long.
+          Une fois entra\u00een\u00e9, le mod\u00e8le est pr\u00eat \u00e0 \u00eatre \u00e9valu\u00e9 sur le jeu de test.")
       )
     ),
-    uiOutput(ns("results_section"))
+    br(),
+    bslib::layout_columns(
+      col_widths = c(4, 8),
+      bslib::card(
+        bslib::card_header("Param\u00e8tres du mod\u00e8le"),
+        sliderInput(
+          ns("n_trees"),
+          "Nombre d'arbres :",
+          min = 100, max = 500, value = 100, step = 50
+        ),
+        div(
+          style = "text-align: center; margin-top: 1rem;",
+          actionButton(ns("train"), "Entra\u00eener le mod\u00e8le",
+                       class = "btn-success btn-lg")
+        )
+      ),
+      uiOutput(ns("results_section"))
+    )
   )
 }
 
@@ -69,11 +83,10 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r) {
     # Section resultats
     output$results_section <- renderUI({
       req(fitted_workflow_r())
-      tagList(
-        hr(),
-        bslib::card(
-          bslib::card_header("Mod\u00e8le entra\u00een\u00e9"),
-          verbatimTextOutput(ns("model_summary")),
+      bslib::card(
+        bslib::card_header("Mod\u00e8le entra\u00een\u00e9"),
+        bslib::card_body(
+          uiOutput(ns("model_summary")),
           hr(),
           div(
             style = "text-align: center; margin-top: 1rem;",
@@ -84,9 +97,40 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r) {
       )
     })
 
-    output$model_summary <- renderPrint({
+    output$model_summary <- renderUI({
       req(fitted_workflow_r())
-      fitted_workflow_r()
+      wf  <- fitted_workflow_r()
+      fit <- wf$fit$fit$fit
+
+      tagList(
+        tags$table(
+          class = "table table-sm",
+          tags$tbody(
+            tags$tr(
+              tags$td(strong("Type")),
+              tags$td(fit$treetype)
+            ),
+            tags$tr(
+              tags$td(strong("Nombre d'arbres")),
+              tags$td(fit$num.trees)
+            ),
+            tags$tr(
+              tags$td(strong("Observations d'entra\u00eenement")),
+              tags$td(fit$num.samples)
+            ),
+            tags$tr(
+              tags$td(strong("Variables utilis\u00e9es")),
+              tags$td(fit$num.independent.variables)
+            ),
+            if (vars_r$task_type() == "regression") {
+              tags$tr(
+                tags$td(strong("R\u00b2 estim\u00e9")),
+                tags$td(round(fit$r.squared, 3))
+              )
+            }
+          )
+        )
+      )
     })
 
     # Validation
