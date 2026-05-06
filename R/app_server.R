@@ -5,6 +5,7 @@ app_server <- function(input, output, session) {
   bslib::nav_hide(id = "tabs", target = "pretraitement")
   bslib::nav_hide(id = "tabs", target = "modelisation")
   bslib::nav_hide(id = "tabs", target = "evaluation")
+  bslib::nav_hide(id = "tabs", target = "export")
 
   # Log du code genere
   code_log <- reactiveVal(list(
@@ -26,7 +27,15 @@ app_server <- function(input, output, session) {
   exploration   <- mod_exploration_server("exploration_1", dataset_r = dataset$data, vars_r = vars)
   pretraitement <- mod_pretraitement_server("pretraitement_1", dataset_r = dataset$data, vars_r = vars, code_log = code_log)
   modelisation  <- mod_modelisation_server("modelisation_1", pretraitement_r = pretraitement, vars_r = vars, code_log = code_log)
-  mod_evaluation_server("evaluation_1", pretraitement_r = pretraitement, modelisation_r = modelisation, vars_r = vars, code_log = code_log)
+  mod_evaluation_server(
+    "evaluation_1",
+    pretraitement_r = pretraitement,
+    modelisation_r  = modelisation,
+    vars_r          = vars,
+    code_log        = code_log,
+    session_root    = session
+  )
+  mod_export_server("export_1", code_log = code_log)
 
   # Verrouillage des onglets
   observeEvent(vars$validated(), {
@@ -68,6 +77,17 @@ app_server <- function(input, output, session) {
       bslib::nav_select(id = "tabs", selected = "evaluation")
     } else {
       bslib::nav_hide(id = "tabs", target = "evaluation")
+    }
+  })
+
+  observeEvent(modelisation$validated(), {
+    if (isTRUE(modelisation$validated())) {
+      bslib::nav_show(id = "tabs", target = "evaluation")
+      bslib::nav_show(id = "tabs", target = "export")
+      bslib::nav_select(id = "tabs", selected = "evaluation")
+    } else {
+      bslib::nav_hide(id = "tabs", target = "evaluation")
+      bslib::nav_hide(id = "tabs", target = "export")
     }
   })
 }

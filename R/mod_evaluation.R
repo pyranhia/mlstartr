@@ -29,7 +29,13 @@ mod_evaluation_ui <- function(id) {
       )
     ),
     br(),
-    uiOutput(ns("main_section"))
+    uiOutput(ns("main_section")),
+    hr(),
+    div(
+      style = "text-align: center; margin-top: 1rem;",
+      actionButton(ns("go_export"), "Voir le code R g\u00e9n\u00e9r\u00e9",
+                   class = "btn-primary btn-lg")
+    )
   )
 }
 
@@ -39,7 +45,7 @@ mod_evaluation_ui <- function(id) {
 #' @importFrom yardstick rmse rsq accuracy precision recall conf_mat
 #' @importFrom parsnip predict.model_fit
 #' @importFrom ggplot2 autoplot
-mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, code_log) {
+mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, code_log, session_root) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -50,6 +56,10 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
       test   <- pretraitement_r$test()
       preds  <- predict(fitted, new_data = test)
       dplyr::bind_cols(test, preds)
+    })
+
+    observeEvent(input$go_export, {
+      bslib::nav_select(id = "tabs", selected = "export", session = session_root)
     })
 
     # Log evaluation

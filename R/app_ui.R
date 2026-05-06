@@ -76,6 +76,13 @@ app_ui <- function(request) {
         title = "Évaluation",
         value = "evaluation",
         mod_evaluation_ui("evaluation_1")
+      ),
+
+      # Tab 7 - Export (masqué)
+      bslib::nav_panel(
+        title = "Export",
+        value = "export",
+        mod_export_ui("export_1")
       )
     )
   )
