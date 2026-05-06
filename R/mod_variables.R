@@ -111,9 +111,12 @@ mod_variables_server <- function(id, dataset_r, code_log, dataset_name) {
       code_log(current)
     })
 
-    observeEvent(list(dataset_r(), input$target), {
+    observeEvent(dataset_r(), {
       validated(FALSE)
     })
+    observeEvent(list(input$target, input$predictors), {
+      validated(FALSE)
+    }, ignoreInit = TRUE)
 
     return(list(
       target     = reactive(input$target),

@@ -1,6 +1,7 @@
 app_server <- function(input, output, session) {
 
   # Cacher les onglets suivants au demarrage
+  bslib::nav_hide(id = "tabs", target = "data")
   bslib::nav_hide(id = "tabs", target = "exploration")
   bslib::nav_hide(id = "tabs", target = "pretraitement")
   bslib::nav_hide(id = "tabs", target = "modelisation")
@@ -16,7 +17,7 @@ app_server <- function(input, output, session) {
   ))
 
   # Modules
-  mod_intro_server("intro_1")
+  mod_intro_server("intro_1", session_root = session)
   dataset       <- mod_dataset_server("dataset_1")
   vars <- mod_variables_server(
     "vars_1",

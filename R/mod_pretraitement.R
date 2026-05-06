@@ -227,6 +227,10 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r, code_log) {
       validated(FALSE)
     })
 
+    observeEvent(list(input$split_prop, input$transformation, input$normalize, input$impute), {
+      validated(FALSE)
+    }, ignoreInit = TRUE)
+
     return(list(
       train     = train_r,
       test      = test_r,

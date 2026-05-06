@@ -160,6 +160,11 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r, code_log) {
       fitted_workflow_r(NULL)
     })
 
+    observeEvent(input$n_trees, {
+      validated(FALSE)
+      fitted_workflow_r(NULL)
+    }, ignoreInit = TRUE)
+
     return(list(
       fitted_workflow = fitted_workflow_r,
       validated       = validated

@@ -146,12 +146,13 @@ mod_intro_ui <- function(id) {
 #' intro Server Functions
 #'
 #' @noRd
-mod_intro_server <- function(id) {
+mod_intro_server <- function(id, session_root) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     observeEvent(input$start, {
-      bslib::nav_select(id = "tabs", selected = "data", session = session$rootScope())
+      bslib::nav_show(id = "tabs", target = "data", session = session_root)
+      bslib::nav_select(id = "tabs", selected = "data", session = session_root)
     })
   })
 }
