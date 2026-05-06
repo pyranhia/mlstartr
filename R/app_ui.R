@@ -23,15 +23,18 @@ app_ui <- function(request) {
 
       # Tab 2 - Données
       bslib::nav_panel(
-        title = "Données",
+        title = "Donn\u00e9es",
         value = "data",
-        bslib::card(
-          bslib::card_header("1. Choix du jeu de données"),
-          mod_dataset_ui("dataset_1")
-        ),
-        bslib::card(
-          bslib::card_header("2. Sélection des variables"),
-          mod_variables_ui("vars_1")
+        bslib::layout_columns(
+          col_widths = c(6, 6),
+          bslib::card(
+            bslib::card_header("1. Choix du jeu de donn\u00e9es"),
+            mod_dataset_ui("dataset_1")
+          ),
+          bslib::card(
+            bslib::card_header("2. S\u00e9lection des variables"),
+            mod_variables_ui("vars_1")
+          )
         )
       ),
 

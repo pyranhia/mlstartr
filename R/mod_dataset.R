@@ -26,6 +26,8 @@ mod_dataset_ui <- function(id) {
 #'
 #' @noRd
 #' @importFrom dplyr mutate
+#' @importFrom utils data
+utils::globalVariables("survived")
 mod_dataset_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 

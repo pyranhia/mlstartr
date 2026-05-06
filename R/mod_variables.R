@@ -3,15 +3,13 @@
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
-#' @importFrom stats setNames
 #' @importFrom shiny NS tagList
 mod_variables_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h3("Sélectionner des variables"),
     uiOutput(ns("target_ui")),
     uiOutput(ns("predictors_ui")),
-    textOutput(ns("task_type")),
+    uiOutput(ns("task_type_ui")),
     hr(),
     actionButton(ns("validate"), "Valider la configuration",
                  class = "btn-primary")
@@ -21,62 +19,77 @@ mod_variables_ui <- function(id) {
 #' variables Server Functions
 #'
 #' @noRd
+#' @importFrom stats setNames
 mod_variables_server <- function(id, dataset_r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Classify variables by type (numeric vs categorical)
-    classify_variables <- function(data, exclude = NULL) {
-      vars <- setdiff(names(data), exclude)
-      continuous_vars <- vars[sapply(data[vars], is.numeric)]
-      discrete_vars   <- vars[!sapply(data[vars], is.numeric)]
-
-      choices_list <- list()
-      if (length(continuous_vars) > 0) {
-        choices_list[["Variables continues"]] <- setNames(continuous_vars, continuous_vars)
-      }
-      if (length(discrete_vars) > 0) {
-        choices_list[["Variables discretes"]] <- setNames(discrete_vars, discrete_vars)
-      }
-      choices_list
+    # Cible par defaut selon le dataset
+    default_target <- function(data) {
+      nms <- names(data)
+      if ("median_house_value" %in% nms) return("median_house_value")
+      if ("survived"           %in% nms) return("survived")
+      if ("species"            %in% nms) return("species")
+      nms[1]
     }
 
-    # When dataset changes, reset target selector
+    # Classifier les variables par type
+    classify_variables <- function(data, exclude = NULL) {
+      vars         <- setdiff(names(data), exclude)
+      numeric_vars <- vars[sapply(data[vars], is.numeric)]
+      other_vars   <- vars[!sapply(data[vars], is.numeric)]
+
+      choices <- list()
+      if (length(numeric_vars) > 0)
+        choices[["Variables continues"]]  <- setNames(numeric_vars, numeric_vars)
+      if (length(other_vars) > 0)
+        choices[["Variables discr\u00e8tes"]] <- setNames(other_vars, other_vars)
+      choices
+    }
+
+    # Quand le dataset change, reinitialiser la cible avec la valeur par defaut
     observeEvent(dataset_r(), {
-      choices_grouped <- classify_variables(dataset_r())
+      target_default <- default_target(dataset_r())
+      choices_all    <- classify_variables(dataset_r())
 
       output$target_ui <- renderUI({
-        selectInput(ns("target"), "Variable reponse :",
-                    choices = choices_grouped)
+        selectInput(ns("target"), "Variable r\u00e9ponse :",
+                    choices  = choices_all,
+                    selected = target_default)
       })
     })
 
-    # When target changes, update predictors (exclude target)
+    # Quand la cible change, mettre a jour les predicteurs (exclure la cible)
     observeEvent(input$target, {
       req(input$target)
-      choices_grouped <- classify_variables(dataset_r(), exclude = input$target)
+      choices_pred <- classify_variables(dataset_r(), exclude = input$target)
 
       output$predictors_ui <- renderUI({
-        selectInput(ns("predictors"), "Variables predictives :",
-                    choices = choices_grouped,
+        selectInput(ns("predictors"), "Variables pr\u00e9dictives :",
+                    choices  = choices_pred,
                     multiple = TRUE,
-                    selected = names(unlist(choices_grouped)))
+                    selected = names(unlist(choices_pred)))
       })
     })
 
-    # Detect task type
+    # Type de tache
     task_type <- reactive({
       req(input$target)
       target_col <- dataset_r()[[input$target]]
       if (is.numeric(target_col) && !is.factor(target_col)) "regression" else "classification"
     })
 
-    output$task_type <- renderText({
+    output$task_type_ui <- renderUI({
       req(task_type())
-      paste("Type de tache detecte :", task_type())
+      label <- if (task_type() == "regression") "R\u00e9gression" else "Classification"
+      div(
+        class = "text-muted mt-2",
+        style = "font-size: 0.9rem;",
+        paste("T\u00e2che d\u00e9tect\u00e9e :", label)
+      )
     })
 
-    # Validation flag
+    # Validation
     validated <- reactiveVal(FALSE)
 
     observeEvent(input$validate, {
@@ -84,7 +97,6 @@ mod_variables_server <- function(id, dataset_r) {
       validated(TRUE)
     })
 
-    # Reset validation if dataset or target changes
     observeEvent(list(dataset_r(), input$target), {
       validated(FALSE)
     })
@@ -97,3 +109,9 @@ mod_variables_server <- function(id, dataset_r) {
     ))
   })
 }
+
+## To be copied in the UI
+# mod_variables_ui("variables_1")
+
+## To be copied in the server
+# mod_variables_server("variables_1")

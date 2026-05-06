@@ -45,6 +45,7 @@ mod_pretraitement_ui <- function(id) {
 #'   all_nominal_predictors all_outcomes
 #' @importFrom rsample initial_split training testing
 #' @importFrom stats as.formula
+#' @importFrom rlang sym :=
 mod_pretraitement_server <- function(id, dataset_r, vars_r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
