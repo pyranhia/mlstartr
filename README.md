@@ -47,4 +47,8 @@ mlstartr::run_app()
 
 ## Licence
 
-Copyright (c) 2026 Thelma Panaïotis — [Pyranhia](https://pyranhia.eu)
+[![CC BY-NC-SA
+4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Copyright (c) 2025 Thelma Panaïotis — [Pyranhia](https://pyranhia.eu) —
+Licence CC BY-NC-SA 4.0
