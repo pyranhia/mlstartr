@@ -7,6 +7,17 @@
 mod_exploration_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    bslib::card(
+      style = "background-color: #f0f7ff;",
+      bslib::card_body(
+        p(style = "font-size: 1rem; margin: 0;",
+          "Avant d'entra\u00eener un mod\u00e8le, il est essentiel de ", strong("comprendre vos donn\u00e9es"),
+          ". Observez la distribution de la variable r\u00e9ponse : est-elle sym\u00e9trique, asym\u00e9trique ?
+          Rep\u00e9rez les valeurs manquantes. Explorez les corr\u00e9lations entre pr\u00e9dicteurs :
+          des variables tr\u00e8s corr\u00e9l\u00e9es entre elles apportent une information redondante.")
+      )
+    ),
+    br(),
     bslib::layout_columns(
       col_widths = c(6, 6),
       bslib::card(
@@ -15,13 +26,14 @@ mod_exploration_ui <- function(id) {
         plotOutput(ns("target_plot"))
       ),
       bslib::card(
-        bslib::card_header("Statistiques descriptives des pr\u00e9dicteurs"),
-        DT::DTOutput(ns("desc_stats"))
-      ),
-      bslib::card(
-        bslib::card_header("Matrice de corr\u00e9lation"),
+        bslib::card_header("Matrice de corr\u00e9lation des pr\u00e9dicteurs"),
         uiOutput(ns("corr_section"))
       )
+    ),
+    br(),
+    bslib::card(
+      bslib::card_header("Statistiques descriptives des pr\u00e9dicteurs"),
+      DT::DTOutput(ns("desc_stats"))
     ),
     hr(),
     div(
