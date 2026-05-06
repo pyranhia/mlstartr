@@ -2,14 +2,13 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
-  knitr::opts_chunk$set(
-    collapse = TRUE,
-    comment = "#>",
-    fig.path = "man/figures/README-",
-    out.width = "100%"
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
 ```
 
@@ -18,99 +17,43 @@ output: github_document
 <!-- badges: start -->
 <!-- badges: end -->
 
-## Road map
+Une application Shiny pédagogique pour s'initier au machine learning supervisé, pas à pas. Développée par [Pyranhia](https://pyranhia.eu).
 
-### Objectif
-Créer une application Shiny pour initier les utilisateurs au machine learning via une interface interactive.
+## Présentation
 
-### Fonctionnalités principales
+`{mlstartr}` guide l'utilisateur à travers un pipeline complet de machine learning supervisé :
 
-#### Tab 1 : Présentation de l’application
-- [ ] Texte de présentation
-- [ ] Illustrations
-- [ ] Définitions liées au ML
+1. **Données** — choix du jeu de données et sélection des variables
+2. **Exploration** — visualisation et statistiques descriptives
+3. **Prétraitement** — séparation train/test et transformations
+4. **Modélisation** — entraînement d'un Random Forest
+5. **Évaluation** — métriques de performance sur le jeu de test
+6. **Export** — récupération du code R généré
 
-#### Tab 2 : Choix du dataset
-- [x] Choix du dataset parmi une sélection (e.g. mtcars, iris, penguins)
-- [ ] Pré-traiter les datasets pour avoir les bons types de variables
-- [x] Sélection variable cible et prédicteurs
-- [ ] Retirer la variable cible de la liste des prédicteurs possibles
-- [ ] Bouton de validation de la configuration et déverouillage de l’onglet suivant
+Trois jeux de données sont disponibles :
+- **California Housing** (régression)
+- **Titanic** (classification binaire)
+- **Penguins** (classification multiclasse)
 
-#### Tab 3 : Exploration des données
-- [ ] Statistiques descriptives
-- [ ] Visualisations
+## Stack technique
 
-#### Tab 4 : Prétraitement
-- [ ] Transformations (normalisation, factorisation)
-- [ ] Séparation train/test
-
-#### Tab 5 : Modélisation
-- [ ] Choix du modèle (RF, etc.)
-- [ ] Entraînement
-
-#### Tab 6 : Évaluation et interprétation
-- [ ] Prédiction sur test set
-- [ ] Mesures de performance
-- [ ] Interprétation
-
-#### Tab 7 : Export
-- [ ] Génération du code R correspondant
-
-## Notes
-
-- Verrouillage des onglets tant que l’étape précédente n’est pas validée
-
-- Utilisation de `{tidymodels}`
-
-## Checklist de tests pour l’application
-
-| Test                              | Fréquence       | Commande clé                     |
-|-----------------------------------|------------------|----------------------------------|
-| Vérification du package           | Régulièrement    | `devtools::check()`             |
-| Lancement de l'app                | En continu       | `golem::run_dev()`              |
-| Tests unitaires                   | À chaque feature | `devtools::test()`              |
-| Build et install du package       | Avant release    | `devtools::build()`             |
-| Docker / déploiement              | Avant push prod  | `docker build` / `run`          |
-| Tests UI / navigateurs            | Manuellement     | Test visuel                     |
-
+- [`{golem}`](https://thinkr-open.github.io/golem/) — architecture du package
+- [`{bslib}`](https://rstudio.github.io/bslib/) — interface utilisateur
+- [`{tidymodels}`](https://www.tidymodels.org/) — pipeline ML
+- [`{datapyranhia}`](https://github.com/pyranhia/datapyranhia) — jeux de données
 
 ## Installation
 
-You can install the development version of `{mlstartr}` like so:
-
-```{r}
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+```{r, eval = FALSE}
+remotes::install_github("pyranhia/mlstartr")
 ```
 
-## Run
-
-You can launch the application by running:
+## Lancement
 
 ```{r, eval = FALSE}
 mlstartr::run_app()
 ```
 
-## About
+## Licence
 
-You are reading the doc about version : `r golem::pkg_version()`
-
-This README has been compiled on the
-
-```{r}
-Sys.time()
-```
-
-Here are the tests results and package coverage:
-
-```{r, error = TRUE}
-devtools::check(quiet = TRUE)
-```
-
-```{r echo = FALSE}
-unloadNamespace("mlstartr")
-```
-
-```{r, error = TRUE}
-covr::package_coverage()
-```
+Copyright (c) 2026 Thelma Panaïotis — [Pyranhia](https://pyranhia.eu)
