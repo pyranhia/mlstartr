@@ -83,6 +83,15 @@ app_ui <- function(request) {
         title = "Export",
         value = "export",
         mod_export_ui("export_1")
+      ),
+
+      bslib::nav_spacer(),
+      bslib::nav_item(
+        actionButton(
+          "reset",
+          "Recommencer",
+          class = "btn-outline-light btn-sm"
+        )
       )
     )
   )

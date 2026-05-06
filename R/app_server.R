@@ -91,4 +91,8 @@ app_server <- function(input, output, session) {
       bslib::nav_hide(id = "tabs", target = "export")
     }
   })
+
+  observeEvent(input$reset, {
+    session$reload()
+  })
 }
