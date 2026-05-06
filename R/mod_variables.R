@@ -106,7 +106,9 @@ mod_variables_server <- function(id, dataset_r, code_log, dataset_name) {
         'predictors <- c(', paste0('"', input$predictors, '"', collapse = ", "), ")\n"
       )
       message(bloc)
-      code_log(c(code_log(), list(bloc)))
+      current <- code_log()
+      current$dataset <- bloc
+      code_log(current)
     })
 
     observeEvent(list(dataset_r(), input$target), {

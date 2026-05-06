@@ -218,7 +218,9 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r, code_log) {
         steps, "\n"
       )
       message(bloc)
-      code_log(c(code_log(), list(bloc)))
+      current <- code_log()
+      current$pretraitement <- bloc
+      code_log(current)
     })
 
     observeEvent(list(dataset_r(), vars_r$target(), vars_r$predictors()), {

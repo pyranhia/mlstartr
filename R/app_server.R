@@ -7,7 +7,12 @@ app_server <- function(input, output, session) {
   bslib::nav_hide(id = "tabs", target = "evaluation")
 
   # Log du code genere
-  code_log <- reactiveVal(list())
+  code_log <- reactiveVal(list(
+    dataset       = NULL,
+    pretraitement = NULL,
+    modelisation  = NULL,
+    evaluation    = NULL
+  ))
 
   # Modules
   mod_intro_server("intro_1")

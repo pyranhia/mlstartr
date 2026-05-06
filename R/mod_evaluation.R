@@ -77,7 +77,9 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
         )
       }
       message(bloc)
-      code_log(c(code_log(), list(bloc)))
+      current <- code_log()
+      current$evaluation <- bloc
+      code_log(current)
     })
 
     output$main_section <- renderUI({

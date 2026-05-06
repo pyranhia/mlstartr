@@ -89,7 +89,9 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r, code_log) {
           "fitted <- fit(wf, data = train)\n"
         )
         message(bloc)
-        code_log(c(code_log(), list(bloc)))
+        current <- code_log()
+        current$modelisation <- bloc
+        code_log(current)
       })
     })
 
