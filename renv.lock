@@ -533,28 +533,6 @@
       "Maintainer": "Ravi Varadhan <ravi.varadhan@jhu.edu>",
       "Repository": "CRAN"
     },
-    "abind": {
-      "Package": "abind",
-      "Version": "1.4-8",
-      "Source": "Repository",
-      "Date": "2024-09-08",
-      "Title": "Combine Multidimensional Arrays",
-      "Authors@R": "c(person(\"Tony\", \"Plate\", email = \"tplate@acm.org\", role = c(\"aut\", \"cre\")), person(\"Richard\", \"Heiberger\", role = c(\"aut\")))",
-      "Maintainer": "Tony Plate <tplate@acm.org>",
-      "Description": "Combine multidimensional arrays into a single array. This is a generalization of 'cbind' and 'rbind'.  Works with vectors, matrices, and higher-dimensional arrays (aka tensors). Also provides functions 'adrop', 'asub', and 'afill' for manipulating, extracting and replacing data in arrays.",
-      "Depends": [
-        "R (>= 1.5.0)"
-      ],
-      "Imports": [
-        "methods",
-        "utils"
-      ],
-      "License": "MIT + file LICENSE",
-      "NeedsCompilation": "no",
-      "Author": "Tony Plate [aut, cre], Richard Heiberger [aut]",
-      "Repository": "RSPM",
-      "Encoding": "UTF-8"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.2.1",
@@ -1064,55 +1042,6 @@
       "Maintainer": "Andrie de Vries <apdevries@gmail.com>",
       "Repository": "CRAN"
     },
-    "covr": {
-      "Package": "covr",
-      "Version": "3.6.4",
-      "Source": "Repository",
-      "Encoding": "UTF-8",
-      "Title": "Test Coverage for Packages",
-      "Authors@R": "c( person(\"Jim\", \"Hester\", email = \"james.f.hester@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Willem\", \"Ligtenberg\", role = \"ctb\"), person(\"Kirill\", \"Müller\", role = \"ctb\"), person(\"Henrik\", \"Bengtsson\", role = \"ctb\"), person(\"Steve\", \"Peak\", role = \"ctb\"), person(\"Kirill\", \"Sevastyanenko\", role = \"ctb\"), person(\"Jon\", \"Clayden\", role = \"ctb\"), person(\"Robert\", \"Flight\", role = \"ctb\"), person(\"Eric\", \"Brown\", role = \"ctb\"), person(\"Brodie\", \"Gaslam\", role = \"ctb\"), person(\"Will\", \"Beasley\", role = \"ctb\"), person(\"Robert\", \"Krzyzanowski\", role = \"ctb\"), person(\"Markus\", \"Wamser\", role = \"ctb\"), person(\"Karl\", \"Forner\", role = \"ctb\"), person(\"Gergely\", \"Daróczi\", role = \"ctb\"), person(\"Jouni\", \"Helske\", role = \"ctb\"), person(\"Kun\", \"Ren\", role = \"ctb\"), person(\"Jeroen\", \"Ooms\", role = \"ctb\"), person(\"Ken\", \"Williams\", role = \"ctb\"), person(\"Chris\", \"Campbell\", role = \"ctb\"), person(\"David\", \"Hugh-Jones\", role = \"ctb\"), person(\"Qin\", \"Wang\", role = \"ctb\"), person(\"Doug\", \"Kelkhoff\", role = \"ctb\"), person(\"Ivan\", \"Sagalaev\", role = c(\"ctb\", \"cph\"), comment = \"highlight.js library\"), person(\"Mark\", \"Otto\", role = \"ctb\", comment = \"Bootstrap library\"), person(\"Jacob\", \"Thornton\", role = \"ctb\", comment = \"Bootstrap library\"), person(family = \"Bootstrap contributors\", role = \"ctb\", comment = \"Bootstrap library\"), person(family = \"Twitter, Inc\", role = \"cph\", comment = \"Bootstrap library\") )",
-      "Description": "Track and report code coverage for your package and (optionally) upload the results to a coverage service like 'Codecov' <https://about.codecov.io> or 'Coveralls' <https://coveralls.io>. Code coverage is a measure of the amount of code being exercised by a set of tests. It is an indirect measure of test quality and completeness. This package is compatible with any testing methodology or framework and tracks coverage of both R code and compiled C/C++/FORTRAN code.",
-      "URL": "https://covr.r-lib.org, https://github.com/r-lib/covr",
-      "BugReports": "https://github.com/r-lib/covr/issues",
-      "Depends": [
-        "R (>= 3.1.0)",
-        "methods"
-      ],
-      "Imports": [
-        "digest",
-        "stats",
-        "utils",
-        "jsonlite",
-        "rex",
-        "httr",
-        "crayon",
-        "withr (>= 1.0.2)",
-        "yaml"
-      ],
-      "Suggests": [
-        "R6",
-        "curl",
-        "knitr",
-        "rmarkdown",
-        "htmltools",
-        "DT (>= 0.2)",
-        "testthat",
-        "rlang",
-        "rstudioapi (>= 0.2)",
-        "xml2 (>= 1.0.0)",
-        "parallel",
-        "memoise",
-        "mockery",
-        "covr"
-      ],
-      "License": "MIT + file LICENSE",
-      "VignetteBuilder": "knitr",
-      "RoxygenNote": "7.2.3",
-      "NeedsCompilation": "yes",
-      "Author": "Jim Hester [aut, cre], Willem Ligtenberg [ctb], Kirill Müller [ctb], Henrik Bengtsson [ctb], Steve Peak [ctb], Kirill Sevastyanenko [ctb], Jon Clayden [ctb], Robert Flight [ctb], Eric Brown [ctb], Brodie Gaslam [ctb], Will Beasley [ctb], Robert Krzyzanowski [ctb], Markus Wamser [ctb], Karl Forner [ctb], Gergely Daróczi [ctb], Jouni Helske [ctb], Kun Ren [ctb], Jeroen Ooms [ctb], Ken Williams [ctb], Chris Campbell [ctb], David Hugh-Jones [ctb], Qin Wang [ctb], Doug Kelkhoff [ctb], Ivan Sagalaev [ctb, cph] (highlight.js library), Mark Otto [ctb] (Bootstrap library), Jacob Thornton [ctb] (Bootstrap library), Bootstrap contributors [ctb] (Bootstrap library), Twitter, Inc [cph] (Bootstrap library)",
-      "Maintainer": "Jim Hester <james.f.hester@gmail.com>",
-      "Repository": "CRAN"
-    },
     "cpp11": {
       "Package": "cpp11",
       "Version": "0.5.2",
@@ -1322,43 +1251,6 @@
       "Author": "Tyson Barrett [aut, cre] (ORCID: <https://orcid.org/0000-0002-2137-1391>), Matt Dowle [aut], Arun Srinivasan [aut], Jan Gorecki [aut], Michael Chirico [aut] (ORCID: <https://orcid.org/0000-0003-0787-087X>), Toby Hocking [aut] (ORCID: <https://orcid.org/0000-0002-3146-0865>), Benjamin Schwendinger [aut] (ORCID: <https://orcid.org/0000-0003-3315-8114>), Ivan Krylov [aut] (ORCID: <https://orcid.org/0000-0002-0172-3812>), Pasha Stetsenko [ctb], Tom Short [ctb], Steve Lianoglou [ctb], Eduard Antonyan [ctb], Markus Bonsch [ctb], Hugh Parsonage [ctb], Scott Ritchie [ctb], Kun Ren [ctb], Xianying Tan [ctb], Rick Saporta [ctb], Otto Seiskari [ctb], Xianghui Dong [ctb], Michel Lang [ctb], Watal Iwasaki [ctb], Seth Wenchel [ctb], Karl Broman [ctb], Tobias Schmidt [ctb], David Arenburg [ctb], Ethan Smith [ctb], Francois Cocquemas [ctb], Matthieu Gomez [ctb], Philippe Chataignon [ctb], Nello Blaser [ctb], Dmitry Selivanov [ctb], Andrey Riabushenko [ctb], Cheng Lee [ctb], Declan Groves [ctb], Daniel Possenriede [ctb], Felipe Parages [ctb], Denes Toth [ctb], Mus Yaramaz-David [ctb], Ayappan Perumal [ctb], James Sams [ctb], Martin Morgan [ctb], Michael Quinn [ctb], @javrucebo [ctb] (GitHub user), Marc Halperin [ctb], Roy Storey [ctb], Manish Saraswat [ctb], Morgan Jacob [ctb], Michael Schubmehl [ctb], Davis Vaughan [ctb], Leonardo Silvestri [ctb], Jim Hester [ctb], Anthony Damico [ctb], Sebastian Freundt [ctb], David Simons [ctb], Elliott Sales de Andrade [ctb], Cole Miller [ctb], Jens Peder Meldgaard [ctb], Vaclav Tlapak [ctb], Kevin Ushey [ctb], Dirk Eddelbuettel [ctb], Tony Fischetti [ctb], Ofek Shilon [ctb], Vadim Khotilovich [ctb], Hadley Wickham [ctb], Bennet Becker [ctb], Kyle Haynes [ctb], Boniface Christian Kamgang [ctb], Olivier Delmarcell [ctb], Josh O'Brien [ctb], Dereck de Mezquita [ctb], Michael Czekanski [ctb], Dmitry Shemetov [ctb], Nitish Jha [ctb], Joshua Wu [ctb], Iago Giné-Vázquez [ctb], Anirban Chetia [ctb], Doris Amoakohene [ctb], Angel Feliz [ctb], Michael Young [ctb], Mark Seeto [ctb], Philippe Grosjean [ctb], Vincent Runge [ctb], Christian Wia [ctb], Elise Maigné [ctb], Vincent Rocher [ctb], Vijay Lulla [ctb], Aljaž Sluga [ctb], Bill Evans [ctb], Reino Bruner [ctb], @badasahog [ctb] (GitHub user), Vinit Thakur [ctb], Mukul Kumar [ctb], Ildikó Czeller [ctb], Manmita Das [ctb]",
       "Maintainer": "Tyson Barrett <t.barrett88@gmail.com>",
       "Repository": "CRAN"
-    },
-    "datapyranhia": {
-      "Package": "datapyranhia",
-      "Version": "0.0.0.9000",
-      "Source": "GitHub",
-      "Title": "Jeu de données pour les formations Pyranhia",
-      "Authors@R": "person(\"Thelma\", \"Panaïotis\", email = \"thelmapana@proton.me\", role = c(\"aut\", \"cre\"))",
-      "Description": "Ce package fournit des jeux de données utilisés dans les formations Pyranhia, facilitant l'apprentissage et la manipulation de données en R.",
-      "License": "MIT + file LICENSE",
-      "Encoding": "UTF-8",
-      "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.3",
-      "Imports": [
-        "abind",
-        "reticulate",
-        "tibble"
-      ],
-      "Depends": [
-        "R (>= 4.1.0)"
-      ],
-      "LazyData": "true",
-      "LazyDataCompression": "xz",
-      "Suggests": [
-        "keras3",
-        "tensorflow",
-        "tfdatasets"
-      ],
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "datapyranhia",
-      "RemoteUsername": "pyranhia",
-      "RemotePkgRef": "pyranhia/datapyranhia",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "8efa1f9c007fc8ae09dc0b82f91e81d72c49ef6f",
-      "NeedsCompilation": "no",
-      "Author": "Thelma Panaïotis [aut, cre]",
-      "Maintainer": "Thelma Panaïotis <thelmapana@proton.me>"
     },
     "desc": {
       "Package": "desc",
@@ -4032,25 +3924,6 @@
       "Maintainer": "Lionel Henry <lionel@posit.co>",
       "Repository": "CRAN"
     },
-    "png": {
-      "Package": "png",
-      "Version": "0.1-9",
-      "Source": "Repository",
-      "Title": "Read and write PNG images",
-      "Author": "Simon Urbanek [aut, cre, cph] (https://urbanek.nz, ORCID: <https://orcid.org/0000-0003-2297-1732>)",
-      "Authors@R": "person(\"Simon\", \"Urbanek\", role=c(\"aut\",\"cre\",\"cph\"), email=\"Simon.Urbanek@r-project.org\", comment=c(\"https://urbanek.nz\", ORCID=\"0000-0003-2297-1732\"))",
-      "Maintainer": "Simon Urbanek <Simon.Urbanek@r-project.org>",
-      "Depends": [
-        "R (>= 2.9.0)"
-      ],
-      "Description": "This package provides an easy and simple way to read, write and display bitmap images stored in the PNG format. It can read and write both files and in-memory raw vectors.",
-      "License": "GPL-2 | GPL-3",
-      "SystemRequirements": "libpng",
-      "URL": "https://www.rforge.net/png/",
-      "BugReports": "https://github.com/s-u/png/issues/",
-      "NeedsCompilation": "yes",
-      "Repository": "CRAN"
-    },
     "praise": {
       "Package": "praise",
       "Version": "1.0.0",
@@ -4697,92 +4570,6 @@
       "NeedsCompilation": "no",
       "Author": "Kevin Ushey [aut, cre] (<https://orcid.org/0000-0003-2880-7407>), Hadley Wickham [aut] (<https://orcid.org/0000-0003-4757-117X>), Posit Software, PBC [cph, fnd]",
       "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
-      "Repository": "CRAN"
-    },
-    "reticulate": {
-      "Package": "reticulate",
-      "Version": "1.46.0",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Interface to 'Python'",
-      "Authors@R": "c( person(\"Tomasz\", \"Kalinowski\", role = c(\"ctb\", \"cre\"), email = \"tomasz@posit.co\"), person(\"Kevin\", \"Ushey\", role = c(\"aut\"), email = \"kevin@posit.co\"), person(\"JJ\", \"Allaire\", role = c(\"aut\"), email = \"jj@posit.co\"), person(\"RStudio\", role = c(\"cph\", \"fnd\")), person(\"Yuan\", \"Tang\", role = c(\"aut\", \"cph\"), email = \"terrytangyuan@gmail.com\", comment = c(ORCID = \"0000-0001-5243-233X\")), person(\"Dirk\", \"Eddelbuettel\", role = c(\"ctb\", \"cph\"), email = \"edd@debian.org\"), person(\"Bryan\", \"Lewis\", role = c(\"ctb\", \"cph\"), email = \"blewis@illposed.net\"), person(\"Sigrid\", \"Keydana\", role = c(\"ctb\"), email = \"sigrid@posit.co\"), person(\"Ryan\", \"Hafen\", role = c(\"ctb\", \"cph\"), email = \"rhafen@gmail.com\"), person(\"Marcus\", \"Geelnard\", role = c(\"ctb\", \"cph\"), comment = \"TinyThread library, http://tinythreadpp.bitsnbites.eu/\") )",
-      "Description": "Interface to 'Python' modules, classes, and functions. When calling into 'Python', R data types are automatically converted to their equivalent 'Python' types. When values are returned from 'Python' to R they are converted back to R types. Compatible with all versions of 'Python' >= 2.7.",
-      "License": "Apache License 2.0",
-      "URL": "https://rstudio.github.io/reticulate/, https://github.com/rstudio/reticulate",
-      "BugReports": "https://github.com/rstudio/reticulate/issues",
-      "SystemRequirements": "Python (>= 2.7.0)",
-      "Encoding": "UTF-8",
-      "Depends": [
-        "R (>= 3.5)"
-      ],
-      "Imports": [
-        "Matrix",
-        "Rcpp (>= 1.0.7)",
-        "RcppTOML",
-        "graphics",
-        "here",
-        "jsonlite",
-        "methods",
-        "png",
-        "rappdirs",
-        "utils",
-        "rlang",
-        "withr"
-      ],
-      "Suggests": [
-        "callr",
-        "knitr",
-        "glue",
-        "cli",
-        "rmarkdown",
-        "pillar",
-        "testthat"
-      ],
-      "LinkingTo": [
-        "Rcpp"
-      ],
-      "RoxygenNote": "7.3.3",
-      "VignetteBuilder": "knitr",
-      "Config/build/compilation-database": "true",
-      "NeedsCompilation": "yes",
-      "Author": "Tomasz Kalinowski [ctb, cre], Kevin Ushey [aut], JJ Allaire [aut], RStudio [cph, fnd], Yuan Tang [aut, cph] (ORCID: <https://orcid.org/0000-0001-5243-233X>), Dirk Eddelbuettel [ctb, cph], Bryan Lewis [ctb, cph], Sigrid Keydana [ctb], Ryan Hafen [ctb, cph], Marcus Geelnard [ctb, cph] (TinyThread library, http://tinythreadpp.bitsnbites.eu/)",
-      "Maintainer": "Tomasz Kalinowski <tomasz@posit.co>",
-      "Repository": "CRAN"
-    },
-    "rex": {
-      "Package": "rex",
-      "Version": "1.2.1",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Friendly Regular Expressions",
-      "Authors@R": "c( person(\"Kevin\", \"Ushey\", , \"kevinushey@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Jim\", \"Hester\", , \"james.f.hester@gmail.com\", role = \"aut\"), person(\"Robert\", \"Krzyzanowski\", , \"rkrzyzanowski@gmail.com\", role = \"aut\") )",
-      "Description": "A friendly interface for the construction of regular expressions.",
-      "License": "MIT + file LICENSE",
-      "URL": "https://github.com/kevinushey/rex",
-      "BugReports": "https://github.com/kevinushey/rex/issues",
-      "Imports": [
-        "lazyeval"
-      ],
-      "Suggests": [
-        "covr",
-        "dplyr",
-        "ggplot2",
-        "Hmisc",
-        "knitr",
-        "magrittr",
-        "rmarkdown",
-        "roxygen2",
-        "rvest",
-        "stringr",
-        "testthat"
-      ],
-      "VignetteBuilder": "knitr",
-      "Encoding": "UTF-8",
-      "RoxygenNote": "7.1.2",
-      "Collate": "'aaa.R' 'utils.R' 'escape.R' 'capture.R' 'character_class.R' 'counts.R' 'lookarounds.R' 'match.R' 'or.R' 'rex-mode.R' 'rex.R' 'shortcuts.R' 'wildcards.R' 'zzz.R'",
-      "NeedsCompilation": "no",
-      "Author": "Kevin Ushey [aut, cre], Jim Hester [aut], Robert Krzyzanowski [aut]",
-      "Maintainer": "Kevin Ushey <kevinushey@gmail.com>",
       "Repository": "CRAN"
     },
     "rhub": {
