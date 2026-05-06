@@ -43,7 +43,7 @@ mod_modelisation_ui <- function(id) {
 #' @noRd
 #' @importFrom parsnip rand_forest set_engine set_mode fit
 #' @importFrom workflows workflow add_recipe add_model
-mod_modelisation_server <- function(id, pretraitement_r, vars_r) {
+mod_modelisation_server <- function(id, pretraitement_r, vars_r, code_log) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -77,6 +77,19 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r) {
 
         incProgress(0.2, detail = "Termin\u00e9 !")
         fitted_workflow_r(fitted)
+
+        bloc <- paste0(
+          "# Modelisation\n",
+          "spec <- rand_forest(trees = ", input$n_trees, ") |>\n",
+          "  set_engine('ranger') |>\n",
+          "  set_mode('", if (vars_r$task_type() == "regression") "regression" else "classification", "')\n\n",
+          "wf <- workflow() |>\n",
+          "  add_recipe(rec) |>\n",
+          "  add_model(spec)\n\n",
+          "fitted <- fit(wf, data = train)\n"
+        )
+        message(bloc)
+        code_log(c(code_log(), list(bloc)))
       })
     })
 

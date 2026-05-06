@@ -39,7 +39,7 @@ mod_evaluation_ui <- function(id) {
 #' @importFrom yardstick rmse rsq accuracy precision recall conf_mat
 #' @importFrom parsnip predict.model_fit
 #' @importFrom ggplot2 autoplot
-mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r) {
+mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, code_log) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -50,6 +50,34 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r) {
       test   <- pretraitement_r$test()
       preds  <- predict(fitted, new_data = test)
       dplyr::bind_cols(test, preds)
+    })
+
+    # Log evaluation
+    observeEvent(predictions_r(), {
+      req(vars_r$task_type(), vars_r$target())
+      df         <- predictions_r()
+      target_col <- vars_r$target()
+      task       <- vars_r$task_type()
+
+      if (task == "regression") {
+        bloc <- paste0(
+          "# Evaluation\n",
+          "test_pred <- predict(fitted, new_data = test) |>\n",
+          "  bind_cols(test)\n\n",
+          "metrics <- metric_set(rmse, rsq)\n",
+          "metrics(test_pred, truth = ", target_col, ", estimate = .pred)\n"
+        )
+      } else {
+        bloc <- paste0(
+          "# Evaluation\n",
+          "test_pred <- predict(fitted, new_data = test) |>\n",
+          "  bind_cols(test)\n\n",
+          "accuracy(test_pred, truth = ", target_col, ", estimate = .pred_class)\n",
+          "conf_mat(test_pred, truth = ", target_col, ", estimate = .pred_class)\n"
+        )
+      }
+      message(bloc)
+      code_log(c(code_log(), list(bloc)))
     })
 
     output$main_section <- renderUI({

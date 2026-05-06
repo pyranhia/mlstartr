@@ -58,7 +58,7 @@ mod_pretraitement_ui <- function(id) {
 #' @importFrom rsample initial_split training testing
 #' @importFrom stats as.formula
 #' @importFrom rlang sym :=
-mod_pretraitement_server <- function(id, dataset_r, vars_r) {
+mod_pretraitement_server <- function(id, dataset_r, vars_r, code_log) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -195,6 +195,30 @@ mod_pretraitement_server <- function(id, dataset_r, vars_r) {
 
     observeEvent(input$validate, {
       validated(TRUE)
+
+      transf <- if (isTruthy(input$transformation)) input$transformation else "none"
+      df     <- dataset_r()[, vars_r$predictors(), drop = FALSE]
+      has_nas <- any(is.na(df))
+      has_cat <- any(sapply(df, function(x) is.character(x) | is.factor(x)))
+
+      steps <- ""
+      if (transf == "log")  steps <- paste0(steps, " |>\n  step_mutate(", vars_r$target(), " = log(", vars_r$target(), "), skip = TRUE)")
+      if (transf == "sqrt") steps <- paste0(steps, " |>\n  step_mutate(", vars_r$target(), " = sqrt(", vars_r$target(), "), skip = TRUE)")
+      if (has_nas && isTruthy(input$impute)) steps <- paste0(steps, " |>\n  step_impute_median(all_numeric_predictors())")
+      if (isTruthy(input$normalize)) steps <- paste0(steps, " |>\n  step_normalize(all_numeric_predictors())")
+      if (has_cat) steps <- paste0(steps, " |>\n  step_unknown(all_nominal_predictors()) |>\n  step_dummy(all_nominal_predictors())")
+
+      bloc <- paste0(
+        "# Split train/test\n",
+        "split <- initial_split(data, prop = ", input$split_prop, ")\n",
+        "train <- training(split)\n",
+        "test  <- testing(split)\n\n",
+        "# Recette\n",
+        "rec <- recipe(", vars_r$target(), " ~ ., data = train)",
+        steps, "\n"
+      )
+      message(bloc)
+      code_log(c(code_log(), list(bloc)))
     })
 
     observeEvent(list(dataset_r(), vars_r$target(), vars_r$predictors()), {

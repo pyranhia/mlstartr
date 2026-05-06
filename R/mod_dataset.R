@@ -73,7 +73,10 @@ mod_dataset_server <- function(id) {
       )
     })
 
-    return(dataset_r)
+    return(list(
+      data    = dataset_r,
+      dataset = reactive(input$dataset)
+    ))
   })
 }
 

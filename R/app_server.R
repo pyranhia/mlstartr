@@ -1,9 +1,3 @@
-#' The application server-side
-#'
-#' @param input,output,session Internal parameters for {shiny}.
-#'     DO NOT REMOVE.
-#' @import shiny
-#' @noRd
 app_server <- function(input, output, session) {
 
   # Cacher les onglets suivants au demarrage
@@ -12,19 +6,22 @@ app_server <- function(input, output, session) {
   bslib::nav_hide(id = "tabs", target = "modelisation")
   bslib::nav_hide(id = "tabs", target = "evaluation")
 
+  # Log du code genere
+  code_log <- reactiveVal(list())
+
   # Modules
   mod_intro_server("intro_1")
   dataset       <- mod_dataset_server("dataset_1")
-  vars          <- mod_variables_server("vars_1", dataset_r = dataset)
-  exploration   <- mod_exploration_server("exploration_1", dataset_r = dataset, vars_r = vars)
-  pretraitement <- mod_pretraitement_server("pretraitement_1", dataset_r = dataset, vars_r = vars)
-  modelisation  <- mod_modelisation_server("modelisation_1", pretraitement_r = pretraitement, vars_r = vars)
-  mod_evaluation_server(
-    "evaluation_1",
-    pretraitement_r = pretraitement,
-    modelisation_r  = modelisation,
-    vars_r          = vars
+  vars <- mod_variables_server(
+    "vars_1",
+    dataset_r    = dataset$data,
+    code_log     = code_log,
+    dataset_name = dataset$dataset
   )
+  exploration   <- mod_exploration_server("exploration_1", dataset_r = dataset$data, vars_r = vars)
+  pretraitement <- mod_pretraitement_server("pretraitement_1", dataset_r = dataset$data, vars_r = vars, code_log = code_log)
+  modelisation  <- mod_modelisation_server("modelisation_1", pretraitement_r = pretraitement, vars_r = vars, code_log = code_log)
+  mod_evaluation_server("evaluation_1", pretraitement_r = pretraitement, modelisation_r = modelisation, vars_r = vars, code_log = code_log)
 
   # Verrouillage des onglets
   observeEvent(vars$validated(), {

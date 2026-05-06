@@ -20,7 +20,7 @@ mod_variables_ui <- function(id) {
 #'
 #' @noRd
 #' @importFrom stats setNames
-mod_variables_server <- function(id, dataset_r) {
+mod_variables_server <- function(id, dataset_r, code_log, dataset_name) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -95,6 +95,18 @@ mod_variables_server <- function(id, dataset_r) {
     observeEvent(input$validate, {
       req(input$target, input$predictors)
       validated(TRUE)
+
+      bloc <- paste0(
+        "# Chargement des donnees\n",
+        "library(datapyranhia)\n",
+        "library(tidymodels)\n\n",
+        'data("', dataset_name(), '", package = "datapyranhia")\n\n',
+        "# Variables\n",
+        'target     <- "', input$target, '"\n',
+        'predictors <- c(', paste0('"', input$predictors, '"', collapse = ", "), ")\n"
+      )
+      message(bloc)
+      code_log(c(code_log(), list(bloc)))
     })
 
     observeEvent(list(dataset_r(), input$target), {
