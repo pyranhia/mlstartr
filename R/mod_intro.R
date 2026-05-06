@@ -103,7 +103,7 @@ mod_intro_ui <- function(id) {
             "Pr\u00e9dire le", strong("prix m\u00e9dian des logements"),
             "dans diff\u00e9rents quartiers de Californie."),
           p(class = "text-muted",
-            "T\u00e2che : R\u00e9gression \u2014 20 640 observations")
+            "T\u00e2che : r\u00e9gression", br(), "20 640 observations")
         )
       ),
       bslib::card(
@@ -114,7 +114,7 @@ mod_intro_ui <- function(id) {
             "Pr\u00e9dire si un passager du Titanic a", strong("surv\u00e9cu ou non"),
             "selon son profil."),
           p(class = "text-muted",
-            "T\u00e2che : Classification binaire \u2014 1 309 observations")
+            "T\u00e2che : classification binaire", br(), "1 309 observations")
         )
       ),
       bslib::card(
@@ -122,10 +122,10 @@ mod_intro_ui <- function(id) {
         bslib::card_header("Penguins"),
         bslib::card_body(
           p(style = "font-size: 1rem;",
-            "Identifier l'", strong("esp\u00e8ce de pingouin"),
+            "Identifier l'", strong("esp\u00e8ce de manchot"),
             "en fonction de ses caract\u00e9ristiques morphologiques."),
           p(class = "text-muted",
-            "T\u00e2che : Classification multiclasse \u2014 344 observations")
+            "T\u00e2che : classification multiclasse", br(), "344 observations")
         )
       )
     ),
