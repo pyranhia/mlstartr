@@ -21,7 +21,7 @@ app_ui <- function(request) {
         mod_intro_ui("intro_1")
       ),
 
-      # Tab 2 - Données
+      # Tab 2 - Donn\u00e9es
       bslib::nav_panel(
         title = "Donn\u00e9es",
         value = "data",
@@ -50,35 +50,35 @@ app_ui <- function(request) {
         )
       ),
 
-      # Tab 3 - Exploration (masqué)
+      # Tab 3 - Exploration (masqu\u00e9)
       bslib::nav_panel(
         title = "Exploration",
         value = "exploration",
         mod_exploration_ui("exploration_1")
       ),
 
-      # Tab 4 - Prétraitement (masqué)
+      # Tab 4 - Pr\u00e9traitement (masqu\u00e9)
       bslib::nav_panel(
-        title = "Prétraitement",
+        title = "Pr\u00e9traitement",
         value = "pretraitement",
         mod_pretraitement_ui("pretraitement_1")
       ),
 
-      # Tab 5 - Modélisation (masqué)
+      # Tab 5 - Mod\u00e9lisation (masqu\u00e9)
       bslib::nav_panel(
-        title = "Modélisation",
+        title = "Mod\u00e9lisation",
         value = "modelisation",
         mod_modelisation_ui("modelisation_1")
       ),
 
-      # Tab 6 - Évaluation (masqué)
+      # Tab 6 - \u00c9valuation (masqu\u00e9)
       bslib::nav_panel(
-        title = "Évaluation",
+        title = "\u00c9valuation",
         value = "evaluation",
         mod_evaluation_ui("evaluation_1")
       ),
 
-      # Tab 7 - Export (masqué)
+      # Tab 7 - Export (masqu\u00e9)
       bslib::nav_panel(
         title = "Export",
         value = "export",

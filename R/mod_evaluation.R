@@ -16,12 +16,12 @@ mod_evaluation_ui <- function(id) {
           "L'\u00e9valuation mesure la qualit\u00e9 des pr\u00e9dictions du mod\u00e8le sur le ",
           strong("jeu de test"), ", des donn\u00e9es qu'il n'a jamais vues pendant l'entra\u00eenement."),
         p(style = "font-size: 1rem; margin: 0;",
-          "Dans le cas d’une ", strong("r\u00e9gression"), ", la ", strong("RMSE"),
+          "Dans le cas d\u2019une ", strong("r\u00e9gression"), ", la ", strong("RMSE"),
           " mesure l'erreur moyenne de pr\u00e9diction, exprim\u00e9e dans la m\u00eame unit\u00e9 que
           la variable cible. Le ", strong("R\u00b2"), " indique la proportion de variance
           expliqu\u00e9e par le mod\u00e8le (entre 0 et 1)."),
         p(style = "font-size: 1rem; margin: 0;",
-          "Dans le cas d’une ", strong("classification"), ", l'", strong("accuracy"),
+          "Dans le cas d\u2019une ", strong("classification"), ", l'", strong("accuracy"),
           " mesure le taux de bonnes pr\u00e9dictions. La ", strong("pr\u00e9cision"),
           " mesure parmi les pr\u00e9dictions positives combien sont correctes, le ",
           strong("recall"), " mesure parmi les vrais positifs combien ont \u00e9t\u00e9 d\u00e9tect\u00e9s.
