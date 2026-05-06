@@ -8,7 +8,7 @@ mod_pretraitement_ui <- function(id) {
   ns <- NS(id)
   tagList(
     bslib::card(
-      style = "background-color: #f0f7ff;",
+      class = "card-pedagogique",
       bslib::card_body(
         p(style = "font-size: 1rem; margin: 0;",
           "Le pr\u00e9traitement pr\u00e9pare vos donn\u00e9es avant l'entra\u00eenement. La ",

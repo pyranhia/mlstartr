@@ -8,7 +8,7 @@ mod_export_ui <- function(id) {
   ns <- NS(id)
   tagList(
     bslib::card(
-      style = "background-color: #f0f7ff;",
+      class = "card-pedagogique",
       bslib::card_body(
         p(style = "font-size: 1rem; margin: 0;",
           "Voici le code R correspondant aux choix que vous avez effectu\u00e9s dans l'application. ",

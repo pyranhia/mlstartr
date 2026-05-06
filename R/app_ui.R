@@ -10,9 +10,24 @@ app_ui <- function(request) {
   tagList(
     golem_add_external_resources(),
     bslib::page_navbar(
-      title = "MLstartr",
+      title = tags$a(
+        href = "#",
+        tags$img(src = "www/logo-medium-light.png", height = "40px", style = "margin-right: 10px;"),
+      ),
+      window_title = "MLstartr",
       id = "tabs",
-      theme = bslib::bs_theme(version = 5, bootswatch = "flatly"),
+      theme = bslib::bs_theme(
+        version      = 5,
+        bg           = "#F5FBFF",
+        fg           = "#0A3D62",
+        primary      = "#0A3D62",
+        secondary    = "#00A896",
+        success      = "#00A896",
+        danger       = "#F17D52",
+        base_font    = "'Inter', sans-serif",
+        heading_font = "'Space Grotesk', sans-serif",
+        code_font    = "'IBM Plex Mono', monospace"
+      ),
 
       # Tab 1 - Introduction
       bslib::nav_panel(
@@ -26,14 +41,21 @@ app_ui <- function(request) {
         title = "Donn\u00e9es",
         value = "data",
         bslib::card(
-          style = "background-color: #f0f7ff;",
+          class = "card-pedagogique",
           bslib::card_body(
-            p(style = "font-size: 1rem; margin: 0;",
+            p(
+              style = "font-size: 1rem; margin: 0;",
               "Dans cette \u00e9tape, vous choisissez sur quoi vous allez travailler. Le ",
-              strong("jeu de donn\u00e9es"), " contient les exemples que l'algorithme va utiliser
-        pour apprendre. La ", strong("variable r\u00e9ponse"), " est ce que vous voulez pr\u00e9dire.
-        Les ", strong("variables pr\u00e9dictives"), " sont les informations utilis\u00e9es
-        pour faire la pr\u00e9diction.")
+              strong("jeu de donn\u00e9es"),
+              " contient les exemples que l'algorithme va utiliser
+        pour apprendre. La ",
+              strong("variable r\u00e9ponse"),
+              " est ce que vous voulez pr\u00e9dire.
+        Les ",
+              strong("variables pr\u00e9dictives"),
+              " sont les informations utilis\u00e9es
+        pour faire la pr\u00e9diction."
+            )
           )
         ),
         br(),
@@ -90,7 +112,8 @@ app_ui <- function(request) {
         actionButton(
           "reset",
           "Recommencer",
-          class = "btn-outline-light btn-sm"
+          class = "btn-sm",
+          style = "color: #0A3D62; border: 1px solid rgba(10, 61, 98, 0.6); background: transparent; border-radius: 8px;"
         )
       )
     )
@@ -106,15 +129,64 @@ golem_add_external_resources <- function() {
   add_resource_path("www", app_sys("app/www"))
 
   tags$head(
-    favicon(),
+    tags$link(rel = "icon", type = "image/png", href = "www/favicon.png"),
     bundle_resources(
       path = app_sys("app/www"),
       app_title = "mlstartr"
     ),
     tags$style(HTML("
-      .bslib-page-fill { overflow-y: auto !important; height: auto !important; }
-      .tab-content { overflow: visible !important; }
-      .tab-pane { overflow: visible !important; }
-    "))
+  /* Scroll */
+  .bslib-page-fill { overflow-y: auto !important; height: auto !important; }
+  .tab-content { overflow: visible !important; }
+  .tab-pane { overflow: visible !important; }
+
+  /* Fond general */
+  body { background-color: #FFFFFF; }
+
+  /* Border-radius uniforme */
+  .btn { border-radius: 8px !important; }
+  .card { border-radius: 8px !important; }
+
+  /* Boutons primaires */
+  .btn-primary {
+    background-color: #0A3D62 !important;
+    border-color: #0A3D62 !important;
+    color: #FFFFFF !important;
+  }
+  .btn-primary:hover {
+    background-color: #082D40 !important;
+    border-color: #082D40 !important;
+  }
+
+  /* Bouton Entrainer (btn-success -> verdigris) */
+  .btn-success {
+    background-color: #00A896 !important;
+    border-color: #00A896 !important;
+    color: #FFFFFF !important;
+  }
+  .btn-success:hover {
+    background-color: #007B6F !important;
+    border-color: #007B6F !important;
+  }
+
+
+  /* Cards pedagogiques : bordure gauche verdigris, fond neutre */
+  .card-pedagogique {
+    background-color: #F8FAFB !important;
+    border-left: 4px solid #00A896 !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+  }
+
+  .card-autre {
+    background-color: #F8FAFB !important;
+    border-left: 4px solid #0A3D62 !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+  }
+
+"))
   )
 }

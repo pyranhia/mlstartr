@@ -10,7 +10,7 @@ mod_evaluation_ui <- function(id) {
   ns <- NS(id)
   tagList(
     bslib::card(
-      style = "background-color: #f0f7ff;",
+      class = "card-pedagogique",
       bslib::card_body(
         p(style = "font-size: 1rem; margin: 0;",
           "L'\u00e9valuation mesure la qualit\u00e9 des pr\u00e9dictions du mod\u00e8le sur le ",

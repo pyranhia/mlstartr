@@ -8,7 +8,7 @@ mod_exploration_ui <- function(id) {
   ns <- NS(id)
   tagList(
     bslib::card(
-      style = "background-color: #f0f7ff;",
+      class = "card-pedagogique",
       bslib::card_body(
         p(style = "font-size: 1rem; margin: 0;",
           "Avant d'entra\u00eener un mod\u00e8le, il est essentiel de ", strong("comprendre vos donn\u00e9es"),

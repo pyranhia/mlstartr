@@ -19,7 +19,7 @@ mod_intro_ui <- function(id) {
 
     # Accroche
     bslib::card(
-      style = "background-color: #f0f7ff;",
+      class = "card-pedagogique",
       bslib::card_body(
         h2("C'est quoi le machine learning ?"),
         p(style = "font-size: 1.1rem;",
@@ -96,7 +96,7 @@ mod_intro_ui <- function(id) {
     bslib::layout_columns(
       col_widths = bslib::breakpoints(sm = 12, md = 4),
       bslib::card(
-        style = "background-color: #f0f7ff;",
+        class = "card-autre",
         bslib::card_header("California Housing"),
         bslib::card_body(
           p(style = "font-size: 1rem;",
@@ -107,7 +107,7 @@ mod_intro_ui <- function(id) {
         )
       ),
       bslib::card(
-        style = "background-color: #fff8f0;",
+        class = "card-autre",
         bslib::card_header("Titanic"),
         bslib::card_body(
           p(style = "font-size: 1rem;",
@@ -118,7 +118,7 @@ mod_intro_ui <- function(id) {
         )
       ),
       bslib::card(
-        style = "background-color: #f0fff4;",
+        class = "card-autre",
         bslib::card_header("Penguins"),
         bslib::card_body(
           p(style = "font-size: 1rem;",
