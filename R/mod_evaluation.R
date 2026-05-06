@@ -9,8 +9,27 @@ utils::globalVariables(c(".pred", ".pred_class", ".pred_bin", ".truth_bin"))
 mod_evaluation_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    uiOutput(ns("metrics_section")),
-    uiOutput(ns("cm_section"))
+    bslib::card(
+      style = "background-color: #f0f7ff;",
+      bslib::card_body(
+        p(style = "font-size: 1rem; margin: 0;",
+          "L'\u00e9valuation mesure la qualit\u00e9 des pr\u00e9dictions du mod\u00e8le sur le ",
+          strong("jeu de test"), ", des donn\u00e9es qu'il n'a jamais vues pendant l'entra\u00eenement."),
+        p(style = "font-size: 1rem; margin: 0;",
+          "Dans le cas d’une ", strong("r\u00e9gression"), ", la ", strong("RMSE"),
+          " mesure l'erreur moyenne de pr\u00e9diction, exprim\u00e9e dans la m\u00eame unit\u00e9 que
+          la variable cible. Le ", strong("R\u00b2"), " indique la proportion de variance
+          expliqu\u00e9e par le mod\u00e8le (entre 0 et 1)."),
+        p(style = "font-size: 1rem; margin: 0;",
+          "Dans le cas d’une ", strong("classification"), ", l'", strong("accuracy"),
+          " mesure le taux de bonnes pr\u00e9dictions. La ", strong("pr\u00e9cision"),
+          " mesure parmi les pr\u00e9dictions positives combien sont correctes, le ",
+          strong("recall"), " mesure parmi les vrais positifs combien ont \u00e9t\u00e9 d\u00e9tect\u00e9s.
+          La ", strong("matrice de confusion"), " d\u00e9taille les erreurs par classe.")
+      )
+    ),
+    br(),
+    uiOutput(ns("main_section"))
   )
 }
 
@@ -18,7 +37,6 @@ mod_evaluation_ui <- function(id) {
 #'
 #' @noRd
 #' @importFrom yardstick rmse rsq accuracy precision recall conf_mat
-#' @importFrom tune collect_predictions
 #' @importFrom parsnip predict.model_fit
 #' @importFrom ggplot2 autoplot
 mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r) {
@@ -34,19 +52,24 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r) {
       dplyr::bind_cols(test, preds)
     })
 
-    # Section metriques
-    output$metrics_section <- renderUI({
+    output$main_section <- renderUI({
       req(predictions_r(), vars_r$task_type(), vars_r$target())
       task       <- vars_r$task_type()
       target_col <- vars_r$target()
       df         <- predictions_r()
 
       if (task == "regression") {
-        rmse_val <- yardstick::rmse(df, truth = !!rlang::sym(target_col), estimate = .pred)$.estimate
-        rsq_val  <- yardstick::rsq(df,  truth = !!rlang::sym(target_col), estimate = .pred)$.estimate
+        rmse_val <- yardstick::rmse(df,
+                                    truth    = !!rlang::sym(target_col),
+                                    estimate = .pred
+        )$.estimate
+        rsq_val <- yardstick::rsq(df,
+                                  truth    = !!rlang::sym(target_col),
+                                  estimate = .pred
+        )$.estimate
 
         bslib::layout_columns(
-          col_widths = c(6, 6),
+          col_widths = c(3, 3),
           bslib::value_box(
             title = "RMSE",
             value = round(rmse_val, 3),
@@ -64,27 +87,31 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r) {
                                        estimate = .pred_class
         )$.estimate
 
-        bslib::value_box(
-          title = "Accuracy",
-          value = scales::percent(acc_val, accuracy = 0.1),
-          theme = "primary"
+        tagList(
+          # Ligne 1 : accuracy
+          bslib::layout_columns(
+            col_widths = c(3),
+            bslib::value_box(
+              title = "Accuracy",
+              value = scales::percent(acc_val, accuracy = 0.1),
+              theme = "primary"
+            )
+          ),
+          br(),
+          # Ligne 2 : CM + metriques par classe
+          bslib::layout_columns(
+            col_widths = c(6, 6),
+            bslib::card(
+              bslib::card_header("Matrice de confusion"),
+              plotOutput(ns("cm_plot"), height = "300px")
+            ),
+            bslib::card(
+              bslib::card_header("M\u00e9triques par classe"),
+              DT::DTOutput(ns("class_metrics"))
+            )
+          )
         )
       }
-    })
-
-    # Matrice de confusion (classification uniquement)
-    output$cm_section <- renderUI({
-      req(vars_r$task_type() == "classification")
-      tagList(
-        hr(),
-        bslib::card(
-          bslib::card_header("Matrice de confusion"),
-          plotOutput(ns("cm_plot")),
-          hr(),
-          bslib::card_header("M\u00e9triques par classe"),
-          DT::DTOutput(ns("class_metrics"))
-        )
-      )
     })
 
     output$cm_plot <- renderPlot({
@@ -107,39 +134,41 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r) {
       req(predictions_r(), vars_r$target())
       df         <- predictions_r()
       target_col <- vars_r$target()
-
-      prec <- yardstick::precision(df,
-                                   truth     = !!rlang::sym(target_col),
-                                   estimate  = .pred_class,
-                                   estimator = "macro"
-      )
-
-      rec <- yardstick::recall(df,
-                               truth     = !!rlang::sym(target_col),
-                               estimate  = .pred_class,
-                               estimator = "macro"
-      )
-
-      # Metriques par classe
-      classes <- levels(df[[target_col]])
+      classes    <- levels(df[[target_col]])
 
       metrics_df <- purrr::map_dfr(classes, function(cls) {
+        n_cls <- sum(df[[target_col]] == cls)
         df_bin <- df |>
           dplyr::mutate(
-            .truth_bin = factor(ifelse(!!rlang::sym(target_col) == cls, cls, "other"), levels = c(cls, "other")),
-            .pred_bin  = factor(ifelse(.pred_class == cls, cls, "other"), levels = c(cls, "other"))
+            .truth_bin = factor(
+              ifelse(!!rlang::sym(target_col) == cls, cls, "other"),
+              levels = c(cls, "other")
+            ),
+            .pred_bin = factor(
+              ifelse(.pred_class == cls, cls, "other"),
+              levels = c(cls, "other")
+            )
           )
-        prec_cls <- yardstick::precision(df_bin, truth = .truth_bin, estimate = .pred_bin)$.estimate
-        rec_cls  <- yardstick::recall(df_bin,    truth = .truth_bin, estimate = .pred_bin)$.estimate
+        prec_cls <- yardstick::precision(df_bin,
+                                         truth = .truth_bin, estimate = .pred_bin
+        )$.estimate
+        rec_cls <- yardstick::recall(df_bin,
+                                     truth = .truth_bin, estimate = .pred_bin
+        )$.estimate
 
         data.frame(
-          Classe     = cls,
-          Precision  = round(prec_cls, 3),
-          Recall     = round(rec_cls, 3)
+          Classe    = cls,
+          n         = n_cls,
+          Precision = round(prec_cls, 3),
+          Recall    = round(rec_cls, 3)
         )
       })
 
-      DT::datatable(metrics_df, rownames = FALSE, options = list(dom = "t"))
+      DT::datatable(
+        metrics_df,
+        rownames = FALSE,
+        options  = list(dom = "t", pageLength = 10)
+      )
     })
   })
 }
