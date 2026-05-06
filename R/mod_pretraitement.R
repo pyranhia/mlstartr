@@ -7,6 +7,18 @@
 mod_pretraitement_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    bslib::card(
+      style = "background-color: #f0f7ff;",
+      bslib::card_body(
+        p(style = "font-size: 1rem; margin: 0;",
+          "Le pr\u00e9traitement pr\u00e9pare vos donn\u00e9es avant l'entra\u00eenement. La ",
+          strong("s\u00e9paration train/test"), " permet d'\u00e9valuer le mod\u00e8le sur des donn\u00e9es
+          qu'il n'a jamais vues. Les ", strong("transformations"), " am\u00e9liorent la qualit\u00e9
+          des pr\u00e9dictions : corriger une asym\u00e9trie sur la variable cible, imputer
+          les valeurs manquantes, normaliser les pr\u00e9dicteurs.")
+      )
+    ),
+    br(),
     bslib::layout_columns(
       col_widths = c(4, 4, 4),
       bslib::card(
