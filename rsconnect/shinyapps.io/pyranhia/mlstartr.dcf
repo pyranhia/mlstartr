@@ -5,6 +5,6 @@ account: pyranhia
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 17317399
-bundleId: 11963019
+bundleId: 11963144
 url: https://pyranhia.shinyapps.io/mlstartr/
 version: 1
