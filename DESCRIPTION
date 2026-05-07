@@ -17,6 +17,7 @@ Imports:
     parsnip,
     pkgload,
     purrr,
+    ranger,
     recipes,
     rlang,
     rsample,
