@@ -9,25 +9,7 @@ utils::globalVariables(c(".pred", ".pred_class", ".pred_bin", ".truth_bin"))
 mod_evaluation_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    bslib::card(
-      class = "card-pedagogique",
-      bslib::card_body(
-        p(style = "font-size: 1rem; margin: 0;",
-          "L'\u00e9valuation mesure la qualit\u00e9 des pr\u00e9dictions du mod\u00e8le sur le ",
-          strong("jeu de test"), ", des donn\u00e9es qu'il n'a jamais vues pendant l'entra\u00eenement."),
-        p(style = "font-size: 1rem; margin: 0;",
-          "Dans le cas d\u2019une ", strong("r\u00e9gression"), ", la ", strong("RMSE"),
-          " mesure l'erreur moyenne de pr\u00e9diction, exprim\u00e9e dans la m\u00eame unit\u00e9 que
-          la variable cible. Le ", strong("R\u00b2"), " indique la proportion de variance
-          expliqu\u00e9e par le mod\u00e8le (entre 0 et 1)."),
-        p(style = "font-size: 1rem; margin: 0;",
-          "Dans le cas d\u2019une ", strong("classification"), ", l'", strong("accuracy"),
-          " mesure le taux de bonnes pr\u00e9dictions. La ", strong("pr\u00e9cision"),
-          " mesure parmi les pr\u00e9dictions positives combien sont correctes, le ",
-          strong("recall"), " mesure parmi les vrais positifs combien ont \u00e9t\u00e9 d\u00e9tect\u00e9s.
-          La ", strong("matrice de confusion"), " d\u00e9taille les erreurs par classe.")
-      )
-    ),
+    uiOutput(ns("card_intro")),
     br(),
     uiOutput(ns("main_section")),
     hr(),
@@ -64,10 +46,48 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
       bslib::nav_select(id = "tabs", selected = "export", session = session_root)
     })
 
+    # Card intro adaptative selon le type de tache
+    output$card_intro <- renderUI({
+      req(vars_r$task_type())
+      task <- vars_r$task_type()
+
+      if (task == "regression") {
+        bslib::card(
+          class = "card-pedagogique",
+          bslib::card_body(
+            p(style = "font-size: 1rem; margin: 0;",
+              "Le mod\u00e8le est maintenant \u00e9valu\u00e9 sur le ",
+              strong("jeu de test"), " \u003a des donn\u00e9es qu\u2019il n\u2019a jamais vues. ",
+              "C\u2019est le vrai test de ses capacit\u00e9s de g\u00e9n\u00e9ralisation."),
+            p(style = "font-size: 1rem; margin: 0; margin-top: 0.5rem;",
+              "La ", strong("RMSE"), " mesure l\u2019erreur moyenne de pr\u00e9diction, exprim\u00e9e dans la m\u00eame unit\u00e9 que ",
+              vars_r$target(), ". ",
+              "Le ", strong("R\u00b2"), " indique la proportion de variance expliqu\u00e9e par le mod\u00e8le \u003a ",
+              "plus il est proche de 1, mieux c\u2019est.")
+          )
+        )
+      } else {
+        bslib::card(
+          class = "card-pedagogique",
+          bslib::card_body(
+            p(style = "font-size: 1rem; margin: 0;",
+              "Le mod\u00e8le est maintenant \u00e9valu\u00e9 sur le ",
+              strong("jeu de test"), " \u003a des donn\u00e9es qu\u2019il n\u2019a jamais vues. ",
+              "C\u2019est le vrai test de ses capacit\u00e9s de g\u00e9n\u00e9ralisation."),
+            p(style = "font-size: 1rem; margin: 0; margin-top: 0.5rem;",
+              "L\u2019", strong("accuracy"), " mesure le taux global de bonnes pr\u00e9dictions. ",
+              "La ", strong("matrice de confusion"), " d\u00e9taille les erreurs par classe : ",
+              "chaque ligne repr\u00e9sente ce que le mod\u00e8le a pr\u00e9dit, ",
+              "chaque colonne ce qui \u00e9tait r\u00e9ellement observ\u00e9. ",
+              "Les cases de la diagonale sont les bonnes pr\u00e9dictions.")
+          )
+        )
+      }
+    })
+
     # Log evaluation
     observeEvent(predictions_r(), {
       req(vars_r$task_type(), vars_r$target())
-      df         <- predictions_r()
       target_col <- vars_r$target()
       task       <- vars_r$task_type()
 
@@ -110,17 +130,43 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
                                   estimate = .pred
         )$.estimate
 
-        bslib::layout_columns(
-          col_widths = c(3, 3),
-          bslib::value_box(
-            title = "RMSE",
-            value = round(rmse_val, 3),
-            theme = "primary"
+        # Interpretation RMSE et R2
+        rsq_qualite <- if (rsq_val >= 0.8) {
+          list(couleur = "#00A896", texte = "tr\u00e8s bonne")
+        } else if (rsq_val >= 0.6) {
+          list(couleur = "#6BAED6", texte = "correcte")
+        } else {
+          list(couleur = "#F17D52", texte = "faible")
+        }
+
+        tagList(
+          bslib::layout_columns(
+            col_widths = c(3, 3),
+            bslib::value_box(
+              title = "RMSE",
+              value = round(rmse_val, 1),
+              theme = "primary"
+            ),
+            bslib::value_box(
+              title = "R\u00b2",
+              value = round(rsq_val, 3),
+              theme = "success"
+            )
           ),
-          bslib::value_box(
-            title = "R\u00b2",
-            value = round(rsq_val, 3),
-            theme = "success"
+          div(
+            style = paste0(
+              "margin-top: 0.75rem; padding: 0.6rem 1rem; border-radius: 6px; ",
+              "border-left: 4px solid ", rsq_qualite$couleur, "; background-color: #F8FAFB;"
+            ),
+            p(style = paste0("margin: 0 0 0.25rem 0; font-weight: 600; color: ", rsq_qualite$couleur, ";"),
+              paste0("Performance ", rsq_qualite$texte, " (R\u00b2 = ", round(rsq_val, 3), ")")),
+            p(style = "margin: 0; font-size: 0.9rem;",
+              paste0(
+                "Le mod\u00e8le explique ", round(rsq_val * 100), "% de la variance de ", target_col, ". ",
+                "En moyenne, ses pr\u00e9dictions s\u2019\u00e9cartent de ", round(rmse_val, 1),
+                " de la valeur r\u00e9elle."
+              )
+            )
           )
         )
       } else {
@@ -129,8 +175,15 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
                                        estimate = .pred_class
         )$.estimate
 
+        acc_qualite <- if (acc_val >= 0.9) {
+          list(couleur = "#00A896", texte = "tr\u00e8s bonne")
+        } else if (acc_val >= 0.75) {
+          list(couleur = "#6BAED6", texte = "correcte")
+        } else {
+          list(couleur = "#F17D52", texte = "faible")
+        }
+
         tagList(
-          # Ligne 1 : accuracy
           bslib::layout_columns(
             col_widths = c(3),
             bslib::value_box(
@@ -139,8 +192,22 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
               theme = "primary"
             )
           ),
+          div(
+            style = paste0(
+              "margin-top: 0.75rem; margin-bottom: 1rem; padding: 0.6rem 1rem; border-radius: 6px; ",
+              "border-left: 4px solid ", acc_qualite$couleur, "; background-color: #F8FAFB;"
+            ),
+            p(style = paste0("margin: 0 0 0.25rem 0; font-weight: 600; color: ", acc_qualite$couleur, ";"),
+              paste0("Performance ", acc_qualite$texte, " (accuracy = ", scales::percent(acc_val, accuracy = 0.1), ")")),
+            p(style = "margin: 0; font-size: 0.9rem;",
+              paste0(
+                "Le mod\u00e8le pr\u00e9dit correctement ", scales::percent(acc_val, accuracy = 0.1),
+                " des observations du jeu de test. ",
+                "La matrice de confusion ci-dessous d\u00e9taille les erreurs par classe."
+              )
+            )
+          ),
           br(),
-          # Ligne 2 : CM + metriques par classe
           bslib::layout_columns(
             col_widths = c(6, 6),
             bslib::card(
@@ -179,7 +246,7 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
       classes    <- levels(df[[target_col]])
 
       metrics_df <- purrr::map_dfr(classes, function(cls) {
-        n_cls <- sum(df[[target_col]] == cls)
+        n_cls  <- sum(df[[target_col]] == cls)
         df_bin <- df |>
           dplyr::mutate(
             .truth_bin = factor(
