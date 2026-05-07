@@ -15,6 +15,7 @@ Imports:
     golem,
     palmerpenguins,
     parsnip,
+    pkgload,
     purrr,
     recipes,
     rlang,
