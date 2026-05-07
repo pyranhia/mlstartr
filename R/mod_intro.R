@@ -11,81 +11,136 @@ mod_intro_ui <- function(id) {
   tagList(
     # Titre
     div(
-      style = "text-align: center; padding: 2rem 0;",
+      style = "text-align: center; padding: 2rem 0 1rem 0;",
       h1("MLstartr"),
       p(style = "font-size: 1.2rem; color: #6c757d;",
-        "Une application pour vous initier au machine learning supervis\u00e9, pas \u00e0 pas.")
+        "Initiez-vous au machine learning supervis\u00e9, pas \u00e0 pas.")
     ),
 
     # Accroche
     bslib::card(
       class = "card-pedagogique",
       bslib::card_body(
-        h2("C'est quoi le machine learning ?"),
-        p(style = "font-size: 1.1rem;",
-          "Le machine learning supervis\u00e9, c'est montrer des exemples \u00e0 un algorithme
-          (des donn\u00e9es avec les bonnes r\u00e9ponses), le laisser apprendre des motifs,
-          puis lui demander de pr\u00e9dire sur de nouvelles donn\u00e9es qu'il n'a jamais vues.")
+        h2(style = "margin-top: 0;", "C\u2019est quoi le machine learning ?"),
+        p(style = "font-size: 1.1rem; margin-bottom: 0.5rem;",
+          "Vous avez des donn\u00e9es, et une question \u00e0 laquelle vous voulez r\u00e9pondre. ",
+          "Le machine learning supervis\u00e9, c\u2019est montrer des exemples \u00e0 un algorithme \u0028des ",
+          "donn\u00e9es avec les bonnes r\u00e9ponses\u0029 pour qu\u2019il apprenne \u00e0 pr\u00e9dire ",
+          "sur de nouveaux cas qu\u2019il n\u2019a jamais vus."),
+        p(style = "font-size: 1.1rem; margin-bottom: 0;",
+          "Ce n\u2019est pas de la magie. C\u2019est une suite d\u2019\u00e9tapes, et vous allez les faire toutes.")
       )
     ),
 
     # Pipeline
     br(),
     h3("Les \u00e9tapes du pipeline"),
+    p(style = "color: #555;", "Cliquez sur une \u00e9tape pour en savoir plus."),
     bslib::layout_columns(
       col_widths = bslib::breakpoints(sm = 6, md = 4, lg = 2),
+
+      # 1. Donnees
       bslib::card(
         style = "text-align: center; background-color: #f8f9fa;",
         bslib::card_body(
-          padding = "0.5rem",
+          padding = "0.75rem",
           strong("1. Donn\u00e9es"),
-          p(class = "text-muted",
-            "Choisir un jeu de donn\u00e9es et les variables")
+          tags$details(
+            style = "text-align: left; margin-top: 0.5rem;",
+            tags$summary(style = "cursor: pointer; color: #00A896; font-size: 0.85rem;",
+                         "En savoir plus"),
+            p(style = "font-size: 0.85rem; margin-top: 0.5rem; color: #555;",
+              "Choisissez un jeu de donn\u00e9es et d\u00e9finissez ce que vous voulez pr\u00e9dire. ",
+              "C\u2019est le point de d\u00e9part de tout pipeline ML.")
+          )
         )
       ),
+
+      # 2. Exploration
       bslib::card(
         style = "text-align: center; background-color: #f8f9fa;",
         bslib::card_body(
-          padding = "0.5rem",
+          padding = "0.75rem",
           strong("2. Exploration"),
-          p(class = "text-muted",
-            "Visualiser et comprendre les donn\u00e9es")
+          tags$details(
+            style = "text-align: left; margin-top: 0.5rem;",
+            tags$summary(style = "cursor: pointer; color: #00A896; font-size: 0.85rem;",
+                         "En savoir plus"),
+            p(style = "font-size: 0.85rem; margin-top: 0.5rem; color: #555;",
+              "Avant d\u2019entra\u00eener un mod\u00e8le, il faut comprendre ses donn\u00e9es. ",
+              "Distribution des variables, valeurs manquantes, corr\u00e9lations \u003a ",
+              "ces observations guident les \u00e9tapes suivantes.")
+          )
         )
       ),
+
+      # 3. Pretraitement
       bslib::card(
         style = "text-align: center; background-color: #f8f9fa;",
         bslib::card_body(
-          padding = "0.5rem",
+          padding = "0.75rem",
           strong("3. Pr\u00e9traitement"),
-          p(class = "text-muted",
-            "Pr\u00e9parer les donn\u00e9es pour le mod\u00e8le")
+          tags$details(
+            style = "text-align: left; margin-top: 0.5rem;",
+            tags$summary(style = "cursor: pointer; color: #00A896; font-size: 0.85rem;",
+                         "En savoir plus"),
+            p(style = "font-size: 0.85rem; margin-top: 0.5rem; color: #555;",
+              "Les donn\u00e9es brutes ne sont pas toujours pr\u00eates \u00e0 l\u2019emploi. ",
+              "On s\u00e9pare un jeu d\u2019entra\u00eenement et un jeu de test, ",
+              "puis on transforme les variables si n\u00e9cessaire.")
+          )
         )
       ),
+
+      # 4. Modelisation
       bslib::card(
         style = "text-align: center; background-color: #f8f9fa;",
         bslib::card_body(
-          padding = "0.5rem",
+          padding = "0.75rem",
           strong("4. Mod\u00e9lisation"),
-          p(class = "text-muted",
-            "Entra\u00eener un Random Forest")
+          tags$details(
+            style = "text-align: left; margin-top: 0.5rem;",
+            tags$summary(style = "cursor: pointer; color: #00A896; font-size: 0.85rem;",
+                         "En savoir plus"),
+            p(style = "font-size: 0.85rem; margin-top: 0.5rem; color: #555;",
+              "On entra\u00eene un Random Forest sur le jeu d\u2019entra\u00eenement. ",
+              "L\u2019algorithme apprend les relations entre les variables et la cible.")
+          )
         )
       ),
+
+      # 5. Evaluation
       bslib::card(
         style = "text-align: center; background-color: #f8f9fa;",
         bslib::card_body(
-          padding = "0.5rem",
+          padding = "0.75rem",
           strong("5. \u00c9valuation"),
-          p(class = "text-muted",
-            "\u00c9valuer les performances du mod\u00e8le")
+          tags$details(
+            style = "text-align: left; margin-top: 0.5rem;",
+            tags$summary(style = "cursor: pointer; color: #00A896; font-size: 0.85rem;",
+                         "En savoir plus"),
+            p(style = "font-size: 0.85rem; margin-top: 0.5rem; color: #555;",
+              "On mesure les performances du mod\u00e8le sur le jeu de test \u003a ",
+              "des donn\u00e9es qu\u2019il n\u2019a jamais vues. ",
+              "C\u2019est l\u00e0 qu\u2019on sait si le mod\u00e8le g\u00e9n\u00e9ralise bien.")
+          )
         )
       ),
+
+      # 6. Export
       bslib::card(
         style = "text-align: center; background-color: #f8f9fa;",
         bslib::card_body(
-          padding = "0.5rem",
+          padding = "0.75rem",
           strong("6. Export"),
-          p(class = "text-muted",
-            "R\u00e9cup\u00e9rer le code R g\u00e9n\u00e9r\u00e9")
+          tags$details(
+            style = "text-align: left; margin-top: 0.5rem;",
+            tags$summary(style = "cursor: pointer; color: #00A896; font-size: 0.85rem;",
+                         "En savoir plus"),
+            p(style = "font-size: 0.85rem; margin-top: 0.5rem; color: #555;",
+              "Chaque choix que vous faites dans l\u2019application g\u00e9n\u00e8re du code R. ",
+              "Vous repartez avec un script reproductible.")
+          )
         )
       )
     ),
@@ -99,33 +154,34 @@ mod_intro_ui <- function(id) {
         class = "card-autre",
         bslib::card_header("California Housing"),
         bslib::card_body(
-          p(style = "font-size: 1rem;",
-            "Pr\u00e9dire le", strong("prix m\u00e9dian des logements"),
-            "dans diff\u00e9rents quartiers de Californie."),
-          p(class = "text-muted",
-            "T\u00e2che : r\u00e9gression", br(), "20 640 observations")
+          p(style = "font-size: 1rem; margin-bottom: 0.25rem;",
+            "Peut-on pr\u00e9dire le ", strong("prix m\u00e9dian des logements"),
+            " dans un quartier californien ?"),
+          p(class = "text-muted", style = "margin: 0;",
+            "R\u00e9gression \u003a 20 640 observations")
         )
       ),
       bslib::card(
         class = "card-autre",
         bslib::card_header("Titanic"),
         bslib::card_body(
-          p(style = "font-size: 1rem;",
-            "Pr\u00e9dire si un passager du Titanic a", strong("surv\u00e9cu ou non"),
-            "selon son profil."),
-          p(class = "text-muted",
-            "T\u00e2che : classification binaire", br(), "1 309 observations")
+          p(style = "font-size: 1rem; margin-bottom: 0.25rem;",
+            "Peut-on pr\u00e9dire si un passager a ",
+            strong("surv\u00e9cu"), " selon son profil ?"),
+          p(class = "text-muted", style = "margin: 0;",
+            "Classification binaire \u003a 1 309 observations")
         )
       ),
       bslib::card(
         class = "card-autre",
         bslib::card_header("Penguins"),
         bslib::card_body(
-          p(style = "font-size: 1rem;",
-            "Identifier l'", strong("esp\u00e8ce de manchot"),
-            "en fonction de ses caract\u00e9ristiques morphologiques."),
-          p(class = "text-muted",
-            "T\u00e2che : classification multiclasse", br(), "344 observations")
+          p(style = "font-size: 1rem; margin-bottom: 0.25rem;",
+            "Peut-on identifier l\u2019",
+            strong("esp\u00e8ce d\u2019un manchot"),
+            "\u00e0 partir de ses mensurations ?"),
+          p(class = "text-muted", style = "margin: 0;",
+            "Classification multiclasse \u003a 344 observations")
         )
       )
     ),
@@ -136,18 +192,19 @@ mod_intro_ui <- function(id) {
       style = "text-align: center; padding-bottom: 2rem;",
       actionButton(
         ns("start"),
-        "C'est parti !",
+        "C\u2019est parti !",
         class = "btn-primary btn-lg"
       )
     ),
-    br(),
+
+    # Footer
     br(),
     div(
       style = "text-align: center; padding: 1rem 0; color: #5A8AAD; font-size: 0.8rem;",
       p(style = "margin-bottom: 0.5rem;",
-        "Cette application illustre les grandes \u00e9tapes d'un pipeline de machine learning supervis\u00e9. ",
-        "Elle est con\u00e7ue \u00e0 des fins p\u00e9dagogiques et ne couvre pas l'ensemble des cas d'usage r\u00e9els ",
-        "(tuning d'hyperparam\u00e8tres, validation crois\u00e9e, gestion avanc\u00e9e des donn\u00e9es...)."
+        "Cette application illustre les grandes \u00e9tapes d\u2019un pipeline de machine learning supervis\u00e9. ",
+        "Elle est con\u00e7ue \u00e0 des fins p\u00e9dagogiques et ne couvre pas l\u2019ensemble des cas d\u2019usage r\u00e9els ",
+        "(tuning d\u2019hyperparam\u00e8tres, validation crois\u00e9e, gestion avanc\u00e9e des donn\u00e9es...)."
       ),
       p(style = "margin-bottom: 0.5rem;",
         "Vous voulez aller plus loin ? ",
