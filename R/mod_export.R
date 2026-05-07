@@ -62,7 +62,7 @@ mod_export_server <- function(id, code_log) {
     header_code <- paste0(
       "# Installation des packages (a executer une seule fois)\n",
       "# install.packages(c('tidymodels', 'ranger', 'pak'))\n",
-      "# pak::pak('pyranhia/datapyranhia')
+      "# pak::pak('pyranhia/datapyranhia')\n"
     )
 
     # Assembler le code
