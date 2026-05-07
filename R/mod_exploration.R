@@ -18,32 +18,7 @@ mod_exploration_ui <- function(id) {
       )
     ),
     br(),
-    bslib::layout_columns(
-      col_widths = c(6, 6),
-      bslib::card(
-        bslib::card_header("Distribution de la variable r\u00e9ponse"),
-        uiOutput(ns("target_options")),
-        plotOutput(ns("target_plot")),
-        uiOutput(ns("target_alert"))
-      ),
-      bslib::card(
-        bslib::card_header("Matrice de corr\u00e9lation des pr\u00e9dicteurs"),
-        uiOutput(ns("corr_section")),
-        uiOutput(ns("corr_alert"))
-      )
-    ),
-    br(),
-    bslib::card(
-      bslib::card_header("Statistiques descriptives des pr\u00e9dicteurs"),
-      DT::DTOutput(ns("desc_stats")),
-      uiOutput(ns("nas_alert"))
-    ),
-    hr(),
-    div(
-      style = "text-align: center; margin-top: 1rem;",
-      actionButton(ns("validate"), "Valider et passer au pr\u00e9traitement",
-                   class = "btn-primary btn-lg")
-    )
+    uiOutput(ns("contenu"))
   )
 }
 
@@ -63,14 +38,51 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       theme_minimal(base_size = 14)
     }
 
+    # Reactive qui ne se declenche que si dataset et variables sont coherents
     selected_data <- reactive({
       req(dataset_r(), vars_r$target(), vars_r$predictors())
-      dataset_r()[, c(vars_r$target(), vars_r$predictors()), drop = FALSE]
+      df        <- dataset_r()
+      cols_want <- c(vars_r$target(), vars_r$predictors())
+      req(all(cols_want %in% names(df)))
+      df[, cols_want, drop = FALSE]
+    })
+
+    # Tout le contenu est conditionne par la coherence dataset/variables
+    output$contenu <- renderUI({
+      req(selected_data())
+      tagList(
+        bslib::layout_columns(
+          col_widths = c(6, 6),
+          bslib::card(
+            bslib::card_header("Distribution de la variable r\u00e9ponse"),
+            uiOutput(ns("target_options")),
+            plotOutput(ns("target_plot")),
+            uiOutput(ns("target_alert"))
+          ),
+          bslib::card(
+            bslib::card_header("Matrice de corr\u00e9lation des pr\u00e9dicteurs"),
+            uiOutput(ns("corr_section")),
+            uiOutput(ns("corr_alert"))
+          )
+        ),
+        br(),
+        bslib::card(
+          bslib::card_header("Statistiques descriptives des pr\u00e9dicteurs"),
+          DT::DTOutput(ns("desc_stats")),
+          uiOutput(ns("nas_alert"))
+        ),
+        hr(),
+        div(
+          style = "text-align: center; margin-top: 1rem;",
+          actionButton(ns("validate"), "Valider et passer au pr\u00e9traitement",
+                       class = "btn-primary btn-lg")
+        )
+      )
     })
 
     # Option transformation axe X (visuelle uniquement)
     output$target_options <- renderUI({
-      req(vars_r$task_type())
+      req(selected_data(), vars_r$task_type())
       if (vars_r$task_type() != "regression") return(NULL)
       selectInput(
         ns("axis_transform"),
@@ -117,29 +129,33 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       df         <- selected_data()
 
       if (task == "regression") {
-        vals  <- df[[target_col]]
-        vals  <- vals[!is.na(vals)]
-        skew  <- mean((vals - mean(vals))^3) / (stats::sd(vals)^3)
+        vals <- df[[target_col]]
+        vals <- vals[!is.na(vals)]
+        skew <- mean((vals - mean(vals))^3) / (stats::sd(vals)^3)
 
-        if (abs(skew) > 1) {
-          direction <- if (skew > 0) "vers la droite (valeurs \u00e9lev\u00e9es rares)" else "vers la gauche (valeurs faibles rares)"
-          conseil   <- if (skew > 0) "une transformation logarithme ou racine carr\u00e9e" else "une transformation racine carr\u00e9e"
+        if (skew > 0.5) {
           alert_box(
-            "Distribution asym\u00e9trique",
-            paste0(
-              "La distribution est asym\u00e9trique ", direction, " (asymm\u00e9trie = ", round(skew, 2), "). ",
-              "Cela peut p\u00e9naliser le mod\u00e8le. Au pr\u00e9traitement, vous pourrez appliquer ",
-              conseil, " pour corriger cela."
+            "Distribution asym\u00e9trique \u00e0 droite",
+            tagList(
+              "L\u2019asymm\u00e9trie vaut ", round(skew, 2), ". ",
+              "Essayez la transformation ", strong("racine carr\u00e9e"), " ou ", strong("logarithme"),
+              " ci-dessus pour visualiser l\u2019effet sur la distribution \u2014 ",
+              "une distribution plus sym\u00e9trique aide g\u00e9n\u00e9ralement le mod\u00e8le \u00e0 mieux apprendre."
             ),
             couleur = "#F17D52"
           )
+        } else {
+          alert_box(
+            "Distribution sym\u00e9trique",
+            "La distribution est approximativement sym\u00e9trique. Aucune transformation n\u00e9cessaire.",
+            couleur = "#00A896"
+          )
         }
       } else {
-        # Desequilibre des classes
-        counts    <- table(df[[target_col]])
-        props     <- counts / sum(counts)
-        min_prop  <- min(props)
-        max_prop  <- max(props)
+        counts   <- table(df[[target_col]])
+        props    <- counts / sum(counts)
+        min_prop <- min(props)
+        max_prop <- max(props)
 
         if (max_prop / min_prop > 2) {
           classe_min <- names(props)[which.min(props)]
@@ -148,9 +164,8 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
             paste0(
               "La classe la moins repr\u00e9sent\u00e9e (\u00ab\u00a0", classe_min, "\u00a0\u00bb) ",
               "repr\u00e9sente seulement ", round(min_prop * 100), "% des observations. ",
-              "Un mod\u00e8le entra\u00een\u00e9 sur des classes d\u00e9s\u00e9quilibr\u00e9es peut apprendre \u00e0
-              tout pr\u00e9dire comme la classe majoritaire. Gardez cela en t\u00eate
-              lors de l\u2019\u00e9valuation."
+              "Un mod\u00e8le entra\u00een\u00e9 sur des classes d\u00e9s\u00e9quilibr\u00e9es peut apprendre ",
+              "\u00e0 tout pr\u00e9dire comme la classe majoritaire. Gardez cela en t\u00eate lors de l\u2019\u00e9valuation."
             ),
             couleur = "#F17D52"
           )
@@ -195,36 +210,16 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
           couleur = "#00A896"
         )
       } else {
-        is_numeric <- sapply(df, is.numeric)
-
-        vars_na_num <- vars_na[names(vars_na) %in% names(is_numeric[is_numeric])]
-        vars_na_cat <- vars_na[names(vars_na) %in% names(is_numeric[!is_numeric])]
-
-        parties <- c()
-        if (length(vars_na_num) > 0) {
-          detail_num <- paste(
-            sapply(names(vars_na_num), function(v) paste0(v, " (", vars_na_num[[v]], " NA)")),
-            collapse = ", "
-          )
-          parties <- c(parties, paste0(
-            "Variables num\u00e9riques : ", detail_num,
-            " \u2014 imputables par la m\u00e9diane au pr\u00e9traitement."
-          ))
-        }
-        if (length(vars_na_cat) > 0) {
-          detail_cat <- paste(
-            sapply(names(vars_na_cat), function(v) paste0(v, " (", vars_na_cat[[v]], " NA)")),
-            collapse = ", "
-          )
-          parties <- c(parties, paste0(
-            "Variables cat\u00e9gorielles : ", detail_cat,
-            " \u2014 ces NA seront trait\u00e9s comme une cat\u00e9gorie \u00ab\u00a0inconnue\u00a0\u00bb lors de l\u2019encodage."
-          ))
-        }
-
+        detail <- paste(
+          sapply(names(vars_na), function(v) paste0(v, " (", vars_na[[v]], " NA)")),
+          collapse = ", "
+        )
         alert_box(
           "Valeurs manquantes d\u00e9tect\u00e9es",
-          paste(parties, collapse = " "),
+          paste0(
+            "Les variables suivantes contiennent des valeurs manquantes : ", detail, ". ",
+            "Au pr\u00e9traitement, vous pourrez les imputer automatiquement par la m\u00e9diane."
+          ),
           couleur = "#F17D52"
         )
       }
@@ -274,7 +269,6 @@ mod_exploration_server <- function(id, dataset_r, vars_r) {
       if (ncol(num_vars) < 2) return(NULL)
 
       corr_mat <- cor(num_vars, use = "pairwise.complete.obs")
-      # Triangulaire superieure seulement, hors diagonale
       corr_mat[lower.tri(corr_mat, diag = TRUE)] <- NA
       forte <- which(abs(corr_mat) > 0.8, arr.ind = TRUE)
 

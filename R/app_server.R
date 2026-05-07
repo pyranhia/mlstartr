@@ -18,7 +18,7 @@ app_server <- function(input, output, session) {
 
   # Modules
   mod_intro_server("intro_1", session_root = session)
-  dataset       <- mod_dataset_server("dataset_1")
+  dataset <- mod_dataset_server("dataset_1")
   vars <- mod_variables_server(
     "vars_1",
     dataset_r    = dataset$data,
@@ -48,8 +48,10 @@ app_server <- function(input, output, session) {
       bslib::nav_hide(id = "tabs", target = "pretraitement")
       bslib::nav_hide(id = "tabs", target = "modelisation")
       bslib::nav_hide(id = "tabs", target = "evaluation")
+      bslib::nav_hide(id = "tabs", target = "export")
+      bslib::nav_select(id = "tabs", selected = "data")
     }
-  })
+  }, ignoreInit = TRUE)
 
   observeEvent(exploration$validated(), {
     if (isTRUE(exploration$validated())) {
@@ -59,8 +61,10 @@ app_server <- function(input, output, session) {
       bslib::nav_hide(id = "tabs", target = "pretraitement")
       bslib::nav_hide(id = "tabs", target = "modelisation")
       bslib::nav_hide(id = "tabs", target = "evaluation")
+      bslib::nav_hide(id = "tabs", target = "export")
+      bslib::nav_select(id = "tabs", selected = "exploration")
     }
-  })
+  }, ignoreInit = TRUE)
 
   observeEvent(pretraitement$validated(), {
     if (isTRUE(pretraitement$validated())) {
@@ -69,17 +73,10 @@ app_server <- function(input, output, session) {
     } else {
       bslib::nav_hide(id = "tabs", target = "modelisation")
       bslib::nav_hide(id = "tabs", target = "evaluation")
+      bslib::nav_hide(id = "tabs", target = "export")
+      bslib::nav_select(id = "tabs", selected = "pretraitement")
     }
-  })
-
-  observeEvent(modelisation$validated(), {
-    if (isTRUE(modelisation$validated())) {
-      bslib::nav_show(id = "tabs", target = "evaluation")
-      bslib::nav_select(id = "tabs", selected = "evaluation")
-    } else {
-      bslib::nav_hide(id = "tabs", target = "evaluation")
-    }
-  })
+  }, ignoreInit = TRUE)
 
   observeEvent(modelisation$validated(), {
     if (isTRUE(modelisation$validated())) {
@@ -89,8 +86,9 @@ app_server <- function(input, output, session) {
     } else {
       bslib::nav_hide(id = "tabs", target = "evaluation")
       bslib::nav_hide(id = "tabs", target = "export")
+      bslib::nav_select(id = "tabs", selected = "modelisation")
     }
-  })
+  }, ignoreInit = TRUE)
 
   observeEvent(input$reset, {
     session$reload()
