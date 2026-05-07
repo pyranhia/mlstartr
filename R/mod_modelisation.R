@@ -30,7 +30,7 @@ mod_modelisation_ui <- function(id) {
             min = 100, max = 500, value = 100, step = 50
           ),
           p(style = "font-size: 0.875rem; color: #555; margin-top: -0.5rem;",
-            "Plus le nombre d\u2019arbres est \u00e9lev\u00e9, plus le mod\u00e8le est stable \u2014
+            "Plus le nombre d\u2019arbres est \u00e9lev\u00e9, plus le mod\u00e8le est stable\u002c
             mais plus l\u2019entra\u00eenement est long. 100 arbres est un bon point de d\u00e9part."),
           div(
             style = "text-align: center; margin-top: 1rem;",
@@ -146,26 +146,19 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r, code_log, datas
       # Interpretation contextuelle
       interpretation <- if (task == "regression") {
         rsq <- round(fit$r.squared, 3)
-        qualite <- if (rsq >= 0.8) {
-          list(couleur = "#00A896", texte = "tr\u00e8s bonne")
-        } else if (rsq >= 0.6) {
-          list(couleur = "#6BAED6", texte = "correcte")
-        } else {
-          list(couleur = "#F17D52", texte = "faible")
-        }
         div(
           style = paste0(
             "margin-top: 0.75rem; padding: 0.6rem 1rem; border-radius: 6px; ",
-            "border-left: 4px solid ", qualite$couleur, "; background-color: #F8FAFB;"
+            "border-left: 4px solid #6BAED6; background-color: #F8FAFB;"
           ),
-          p(style = paste0("margin: 0 0 0.25rem 0; font-weight: 600; color: ", qualite$couleur, ";"),
+          p(style = "margin: 0 0 0.25rem 0; font-weight: 600; color: #6BAED6;",
             paste0("R\u00b2 estim\u00e9 : ", rsq)),
           p(style = "margin: 0; font-size: 0.9rem;",
             paste0(
-              "Sur le jeu d\u2019entra\u00eenement, le mod\u00e8le explique ", round(rsq * 100), "% ",
-              "de la variance de ", vars_r$target(), ". ",
-              "C\u2019est une performance ", qualite$texte, ". ",
-              "L\u2019\u00e9valuation sur le jeu de test donnera une image plus fiable."
+              "Le mod\u00e8le explique ", round(rsq * 100), "% de la variance de ", vars_r$target(), ". ",
+              "Pr\u00e9dire des prix immobiliers est un probl\u00e8me intrins\u00e8quement difficile \u003a ",
+              "un R\u00b2 entre 50% et 70% est courant sur ce type de donn\u00e9es. ",
+              "L\u2019\u00e9valuation sur le jeu de test donnera le verdict final."
             )
           )
         )
@@ -189,7 +182,7 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r, code_log, datas
           p(style = "margin: 0; font-size: 0.9rem;",
             paste0(
               "Le mod\u00e8le se trompe sur environ ", oob, "% des observations. ",
-              "C\u2019est un indicateur pr\u00e9liminaire \u2014 ",
+              "C\u2019est un indicateur pr\u00e9liminaire\u002c ",
               "l\u2019\u00e9valuation sur le jeu de test donnera le verdict final."
             )
           )
@@ -212,11 +205,6 @@ mod_modelisation_server <- function(id, pretraitement_r, vars_r, code_log, datas
     })
 
     observeEvent(input$n_trees, {
-      validated(FALSE)
-      fitted_workflow_r(NULL)
-    }, ignoreInit = TRUE)
-
-    observeEvent(dataset_r(), {
       validated(FALSE)
       fitted_workflow_r(NULL)
     }, ignoreInit = TRUE)

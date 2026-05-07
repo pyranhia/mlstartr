@@ -101,12 +101,11 @@ mod_variables_server <- function(id, dataset_r, code_log, dataset_name) {
           paste0("\u00ab\u00a0", niveaux, "\u00a0\u00bb"),
           collapse = ", "
         )
-        type_str <- if (n == 2) "classification binaire" else "classification multiclasse"
         msg <- tagList(
           tags$strong(target), " est une cat\u00e9gorie avec ", n,
           " valeurs possibles : ", niveaux_str, ".",
           " Pr\u00e9dire une cat\u00e9gorie, c\u2019est de la ",
-          tags$strong(type_str), "."
+          "r\u00e9gression."
         )
         couleur <- "#F17D52"
         label   <- paste0("T\u00e2che : ", type_str)
