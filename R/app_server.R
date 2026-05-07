@@ -27,7 +27,13 @@ app_server <- function(input, output, session) {
   )
   exploration   <- mod_exploration_server("exploration_1", dataset_r = dataset$data, vars_r = vars)
   pretraitement <- mod_pretraitement_server("pretraitement_1", dataset_r = dataset$data, vars_r = vars, code_log = code_log)
-  modelisation  <- mod_modelisation_server("modelisation_1", pretraitement_r = pretraitement, vars_r = vars, code_log = code_log)
+  modelisation <- mod_modelisation_server(
+    "modelisation_1",
+    pretraitement_r = pretraitement,
+    vars_r          = vars,
+    code_log        = code_log,
+    dataset_r       = dataset$data
+  )
   mod_evaluation_server(
     "evaluation_1",
     pretraitement_r = pretraitement,

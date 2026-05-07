@@ -54,7 +54,9 @@ mod_evaluation_server <- function(id, pretraitement_r, modelisation_r, vars_r, c
       req(modelisation_r$fitted_workflow(), pretraitement_r$test())
       fitted <- modelisation_r$fitted_workflow()
       test   <- pretraitement_r$test()
-      preds  <- predict(fitted, new_data = test)
+      cols_modele <- fitted$pre$mold$blueprint$ptypes$predictors |> names()
+      req(all(cols_modele %in% names(test)))
+      preds <- predict(fitted, new_data = test)
       dplyr::bind_cols(test, preds)
     })
 
