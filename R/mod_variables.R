@@ -9,7 +9,6 @@ mod_variables_ui <- function(id) {
   tagList(
     uiOutput(ns("target_ui")),
     uiOutput(ns("predictors_ui")),
-    uiOutput(ns("task_type_ui")),
     hr(),
     actionButton(ns("validate"), "Valider la configuration",
                  class = "btn-primary")
@@ -77,48 +76,6 @@ mod_variables_server <- function(id, dataset_r, code_log, dataset_name) {
       req(fixed_target())
       target_col <- dataset_r()[[fixed_target()]]
       if (is.numeric(target_col) && !is.factor(target_col)) "regression" else "classification"
-    })
-
-    # Encadre contextuel selon la variable cible
-    output$task_type_ui <- renderUI({
-      req(task_type(), fixed_target(), dataset_r())
-
-      is_reg <- task_type() == "regression"
-      target <- fixed_target()
-
-      if (is_reg) {
-        msg <- tagList(
-          tags$strong(target), " est une variable num\u00e9rique continue.",
-          " Pr\u00e9dire une valeur chiffr\u00e9e, c\u2019est de la ",
-          tags$strong("r\u00e9gression"), "."
-        )
-        couleur <- "#6BAED6"
-        label   <- "T\u00e2che : r\u00e9gression"
-      } else {
-        niveaux     <- levels(factor(dataset_r()[[target]]))
-        n           <- length(niveaux)
-        niveaux_str <- paste(
-          paste0("\u00ab\u00a0", niveaux, "\u00a0\u00bb"),
-          collapse = ", "
-        )
-        msg <- tagList(
-          tags$strong(target), " est une cat\u00e9gorie avec ", n,
-          " valeurs possibles : ", niveaux_str, ".",
-          " Pr\u00e9dire une cat\u00e9gorie, c\u2019est de la ",
-          "r\u00e9gression."
-        )
-        couleur <- "#F17D52"
-        label   <- paste0("T\u00e2che : ", type_str)
-      }
-
-      div(
-        style = paste0(
-          "margin-top: 0.75rem; padding: 0.6rem 1rem; border-radius: 6px; ",
-          "border-left: 4px solid ", couleur, "; background-color: #F8FAFB;"
-        ),
-        p(style = paste0("margin: 0 0 0.25rem 0; font-weight: 600; color: ", couleur, ";"), label),
-        p(style = "margin: 0;", msg)
-      )
     })
 
     # Validation
